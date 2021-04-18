@@ -128,6 +128,33 @@ module Commands =
             Choice1Of2 Quit
         | _ -> Choice2Of2 CannotParseInvalidCommand
 
+    let grabItem (state: State)  =
+            printfn "The items here are: "
+
+            List.indexed state.gameWorld.levelItems
+            |> List.iter (fun (index,items) -> printfn "[%i] Name = %s, Description = %s \n"
+                                                (index + 1)
+                                                items.item.name
+                                                items.item.description)
+            //prints items at location with index + 1
+            printf "-Which item do you wish to grab? (Enter the number) > "
+
+            let (parsed, index) = Int32.TryParse (Console.ReadLine().Trim().ToLower())
+            if parsed then
+                let item = List.tryItem (index - 1) state.gameWorld.levelItems
+                if item <> None then
+                    let newPlayerList = item.Value.item :: state.player.playerItems 
+                    let newGameWorldList = List.except (List.toSeq [item.Value]) state.gameWorld.levelItems
+                    let returnState : State =
+                        state
+                        |> over (_player << _playerItems) (fun _ -> newPlayerList) // update player items
+                        |> over (_gameWorld << _levelItems) (fun _ -> newGameWorldList) // update world items
+                    Choice1Of2 returnState
+                else
+                Choice2Of2 CannotParseInvalidCommand
+            else
+                Choice2Of2 CannotParseInvalidCommand
+
     //execute command
     let executeCommand state command =
         match command with
@@ -186,32 +213,16 @@ module Commands =
             //prints inventory
             Choice1Of2 state
         | Grab ->
-            printfn "The items here are: "
-
-            List.indexed state.gameWorld.levelItems
-            |> List.iter (fun (index,items) -> printfn "[%i] Name = %s, Description = %s \n"
-                                                (index + 1)
-                                                items.item.name
-                                                items.item.description)
-            //prints items at location with index + 1
-            printf "-Which item do you wish to grab? > "
-
-            let (parsed, index) = Int32.TryParse (Console.ReadLine().Trim().ToLower())
-            if parsed then
-                let findItem = 
-                    try
-                        Some (List.item (index - 1) state.gameWorld.levelItems)
-                    with
-                    | :? ArgumentException -> printfn "There is no item with that index"; None
-                let newPlayerList = findItem.Value.item :: state.player.playerItems 
-                let newGameWorldList = List.except (List.toSeq [findItem.Value]) state.gameWorld.levelItems
-                let returnState : State =
-                    state
-                    |> over (_player << _playerItems) (fun _ -> newPlayerList) // update player items
-                    |> over (_gameWorld << _levelItems) (fun _ -> newGameWorldList) // update world items
-                Choice1Of2 returnState
+            if not state.gameWorld.levelItems.IsEmpty then
+                match grabItem state with
+                | Choice1Of2 newState ->
+                    newState.player.playerItems
+                    |> Seq.iter (fun player -> printfn "You have a %s, Description = %s" player.name player.description)
+                    Choice1Of2 newState
+                | Choice2Of2 _error -> Choice2Of2 CannotParseInvalidCommand
             else
-                Choice2Of2 CannotParseInvalidCommand
+                printfn "There are no items at this location"
+                Choice1Of2 state
         | Help ->
             printfn "%s" help //prints help
             Choice1Of2 state
