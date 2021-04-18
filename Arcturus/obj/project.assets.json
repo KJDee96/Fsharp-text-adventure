@@ -1,0 +1,257 @@
+{
+  "version": 3,
+  "targets": {
+    "net5.0": {
+      "FSharp.Core/5.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/FSharp.Core.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/FSharp.Core.dll": {}
+        },
+        "resource": {
+          "lib/netstandard2.0/cs/FSharp.Core.resources.dll": {
+            "locale": "cs"
+          },
+          "lib/netstandard2.0/de/FSharp.Core.resources.dll": {
+            "locale": "de"
+          },
+          "lib/netstandard2.0/es/FSharp.Core.resources.dll": {
+            "locale": "es"
+          },
+          "lib/netstandard2.0/fr/FSharp.Core.resources.dll": {
+            "locale": "fr"
+          },
+          "lib/netstandard2.0/it/FSharp.Core.resources.dll": {
+            "locale": "it"
+          },
+          "lib/netstandard2.0/ja/FSharp.Core.resources.dll": {
+            "locale": "ja"
+          },
+          "lib/netstandard2.0/ko/FSharp.Core.resources.dll": {
+            "locale": "ko"
+          },
+          "lib/netstandard2.0/pl/FSharp.Core.resources.dll": {
+            "locale": "pl"
+          },
+          "lib/netstandard2.0/pt-BR/FSharp.Core.resources.dll": {
+            "locale": "pt-BR"
+          },
+          "lib/netstandard2.0/ru/FSharp.Core.resources.dll": {
+            "locale": "ru"
+          },
+          "lib/netstandard2.0/tr/FSharp.Core.resources.dll": {
+            "locale": "tr"
+          },
+          "lib/netstandard2.0/zh-Hans/FSharp.Core.resources.dll": {
+            "locale": "zh-Hans"
+          },
+          "lib/netstandard2.0/zh-Hant/FSharp.Core.resources.dll": {
+            "locale": "zh-Hant"
+          }
+        }
+      },
+      "FSharpPlus/1.2.0-CI01971": {
+        "type": "package",
+        "dependencies": {
+          "FSharp.Core": "4.6.2"
+        },
+        "compile": {
+          "lib/netstandard2.0/FSharpPlus.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/FSharpPlus.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "FSharp.Core/5.0.0": {
+      "sha512": "iHoYXA0VaSQUONGENB1aVafjDDZDZpwu39MtaRCTrmwFW/cTcK0b2yKNVYneFHJMc3ChtsSoM9lNtJ1dYXkHfA==",
+      "type": "package",
+      "path": "fsharp.core/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "fsharp.core.5.0.0.nupkg.sha512",
+        "fsharp.core.nuspec",
+        "lib/netstandard2.0/FSharp.Core.dll",
+        "lib/netstandard2.0/FSharp.Core.xml",
+        "lib/netstandard2.0/cs/FSharp.Core.resources.dll",
+        "lib/netstandard2.0/de/FSharp.Core.resources.dll",
+        "lib/netstandard2.0/es/FSharp.Core.resources.dll",
+        "lib/netstandard2.0/fr/FSharp.Core.resources.dll",
+        "lib/netstandard2.0/it/FSharp.Core.resources.dll",
+        "lib/netstandard2.0/ja/FSharp.Core.resources.dll",
+        "lib/netstandard2.0/ko/FSharp.Core.resources.dll",
+        "lib/netstandard2.0/pl/FSharp.Core.resources.dll",
+        "lib/netstandard2.0/pt-BR/FSharp.Core.resources.dll",
+        "lib/netstandard2.0/ru/FSharp.Core.resources.dll",
+        "lib/netstandard2.0/tr/FSharp.Core.resources.dll",
+        "lib/netstandard2.0/zh-Hans/FSharp.Core.resources.dll",
+        "lib/netstandard2.0/zh-Hant/FSharp.Core.resources.dll"
+      ]
+    },
+    "FSharpPlus/1.2.0-CI01971": {
+      "sha512": "wfrCYHaauVaaAfajuSxY56IEJ7LLiukOlGCXZ6ZOcqtC7uFDfujB8BfrE6AXWAx5rhJkUAhi3bk9MQ5NJCAi/g==",
+      "type": "package",
+      "path": "fsharpplus/1.2.0-ci01971",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "fable/Builders.fs",
+        "fable/Control/Alternative.fs",
+        "fable/Control/Applicative.fs",
+        "fable/Control/Arrow.fs",
+        "fable/Control/ArrowApply.fs",
+        "fable/Control/ArrowChoice.fs",
+        "fable/Control/Bifoldable.fs",
+        "fable/Control/Bitraversable.fs",
+        "fable/Control/Category.fs",
+        "fable/Control/Collection.fs",
+        "fable/Control/Comonad.fs",
+        "fable/Control/Converter.fs",
+        "fable/Control/Foldable.fs",
+        "fable/Control/Functor.fs",
+        "fable/Control/Indexable.fs",
+        "fable/Control/Invokable.fs",
+        "fable/Control/Monad.fs",
+        "fable/Control/MonadOps.fs",
+        "fable/Control/MonadTrans.fs",
+        "fable/Control/Monoid.fs",
+        "fable/Control/Numeric.fs",
+        "fable/Control/Traversable.fs",
+        "fable/Control/Tuple.fs",
+        "fable/Data/Cont.fs",
+        "fable/Data/Coproduct.fs",
+        "fable/Data/DList.fs",
+        "fable/Data/Error.fs",
+        "fable/Data/Free.fs",
+        "fable/Data/Identity.fs",
+        "fable/Data/Kleisli.fs",
+        "fable/Data/List.fs",
+        "fable/Data/Monoids.fs",
+        "fable/Data/NonEmptyList.fs",
+        "fable/Data/NonEmptyMap.fs",
+        "fable/Data/NonEmptySeq.fs",
+        "fable/Data/NonEmptySet.fs",
+        "fable/Data/Option.fs",
+        "fable/Data/ParallelArray.fs",
+        "fable/Data/Reader.fs",
+        "fable/Data/Seq.fs",
+        "fable/Data/State.fs",
+        "fable/Data/Validation.fs",
+        "fable/Data/Writer.fs",
+        "fable/Data/ZipList.fs",
+        "fable/Extensions/Array.fs",
+        "fable/Extensions/Async.fs",
+        "fable/Extensions/Choice.fs",
+        "fable/Extensions/Dict.fs",
+        "fable/Extensions/Dictionary.fs",
+        "fable/Extensions/Enumerator.fs",
+        "fable/Extensions/Extensions.fs",
+        "fable/Extensions/IList.fs",
+        "fable/Extensions/IReadOnlyCollection.fs",
+        "fable/Extensions/IReadOnlyDictionary.fs",
+        "fable/Extensions/IReadOnlyList.fs",
+        "fable/Extensions/Lazy.fs",
+        "fable/Extensions/List.fs",
+        "fable/Extensions/Map.fs",
+        "fable/Extensions/Nullable.fs",
+        "fable/Extensions/Option.fs",
+        "fable/Extensions/ResizeArray.fs",
+        "fable/Extensions/Result.fs",
+        "fable/Extensions/Seq.fs",
+        "fable/Extensions/String.fs",
+        "fable/Extensions/Task.fs",
+        "fable/Extensions/Tuple.fs",
+        "fable/FSharpPlus.fsproj",
+        "fable/Internals.fs",
+        "fable/Lens.fs",
+        "fable/Math/Applicative.fs",
+        "fable/Math/Generic.fs",
+        "fable/Memoization.fs",
+        "fable/Operators.fs",
+        "fable/Parsing.fs",
+        "fsharpplus.1.2.0-ci01971.nupkg.sha512",
+        "fsharpplus.nuspec",
+        "lib/net45/FSharpPlus.dll",
+        "lib/net45/FSharpPlus.xml",
+        "lib/netstandard2.0/FSharpPlus.dll",
+        "lib/netstandard2.0/FSharpPlus.xml"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net5.0": [
+      "FSharp.Core >= 5.0.0",
+      "FSharpPlus >= 1.2.0-CI01971"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\Kieran\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\Kieran\\RiderProjects\\Arcturus\\Arcturus\\Arcturus.fsproj",
+      "projectName": "Arcturus",
+      "projectPath": "C:\\Users\\Kieran\\RiderProjects\\Arcturus\\Arcturus\\Arcturus.fsproj",
+      "packagesPath": "C:\\Users\\Kieran\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Kieran\\RiderProjects\\Arcturus\\Arcturus\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\Kieran\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net5.0"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "projectReferences": {}
+        }
+      }
+    },
+    "frameworks": {
+      "net5.0": {
+        "targetAlias": "net5.0",
+        "dependencies": {
+          "FSharp.Core": {
+            "target": "Package",
+            "version": "[5.0.0, )",
+            "generatePathProperty": true
+          },
+          "FSharpPlus": {
+            "target": "Package",
+            "version": "[1.2.0-CI01971, )",
+            "generatePathProperty": true
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

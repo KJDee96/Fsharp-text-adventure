@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="types\Items.fs" />
+        <Compile Include="types\Levels.fs" />
+        <Compile Include="types\Player.fs" />
+        <Compile Include="types\GameWorld.fs" />
+        <Compile Include="types\GameState.fs" />
+        <Compile Include="utils\Printing.fs" />
+        <Compile Include="utils\Errors.fs" />
+        <Compile Include="Commands.fs" />
+        <Compile Include="Program.fs" />
+
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FSharpPlus" Version="1.2.0-CI01971" />
+    </ItemGroup>
+
+</Project>
