@@ -15,6 +15,9 @@
         <Compile Include="utils\Errors.fs" />
         <Compile Include="Commands.fs" />
         <Compile Include="Program.fs" />
+        <Content Include="..\.gitignore">
+          <Link>.gitignore</Link>
+        </Content>
 
     </ItemGroup>
 

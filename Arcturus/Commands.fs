@@ -203,9 +203,8 @@ module Commands =
                         Some (List.item (index - 1) state.gameWorld.levelItems)
                     with
                     | :? ArgumentException -> printfn "There is no item with that index"; None
-                let newPlayerList = state.player.playerItems @ [findItem.Value.item]
+                let newPlayerList = findItem.Value.item :: state.player.playerItems 
                 let newGameWorldList = List.except (List.toSeq [findItem.Value]) state.gameWorld.levelItems
-                // TODO seperate functions to add/remove item
                 let returnState : State =
                     state
                     |> over (_player << _playerItems) (fun _ -> newPlayerList) // update player items
