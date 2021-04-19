@@ -1,6 +1,5 @@
 ﻿namespace Arcturus.Core
 
-open Arcturus.Types.Items
 open Arcturus.Types.Levels
 open Arcturus.Types.Player
 open Arcturus.Types.GameState
@@ -14,7 +13,7 @@ open System.Text.RegularExpressions
 
 module Commands =
 
-    type Commands =
+    type Command =
         | Move of int * int
         | Check
         | Inventory
@@ -50,7 +49,7 @@ module Commands =
               Regex.Match(input, quitPattern) with
         | moveMatch, _, _, _, _, _ when moveMatch.Success -> MoveMatch
         | _, checkMatch, _, _, _, _ when checkMatch.Success -> CheckMatch
-        | _, _, invMatch, _, _, _  when invMatch.Success -> InvMatch
+        | _, _, invMatch, _, _, _ when invMatch.Success -> InvMatch
         | _, _, _, grabMatch, _, _ when grabMatch.Success -> GrabMatch
         | _, _, _, _, helpMatch, _ when helpMatch.Success -> HelpMatch
         | _, _, _, _, _, quitMatch when quitMatch.Success -> QuitMatch
@@ -81,12 +80,11 @@ module Commands =
         else if newLocation.x = -1 || newLocation.y = -1 then
             Choice2Of2 CannotMove
         else
-            //lens for assigning new location to a new player state
             let returnState : State =
-                over (_player << _location) (fun _ -> newLocation) state
+                over (_player << _location) (fun _ -> newLocation) state // update player location and then the player gamestate
 
             Choice1Of2 returnState
-    
+
     //parsing the matched direction command
     let parseDirectionInput input =
         match input with
@@ -104,100 +102,76 @@ module Commands =
             Choice1Of2(Move d)
         | _ -> Choice2Of2 CannotMatchCompass
 
+    let grabItem (state: State) =
+        printf "%s" grabItemPrompt
+
+        let (parsed, index) =
+            Int32.TryParse(Console.ReadLine().Trim().ToLower())
+
+        if parsed then
+            let item =
+                List.tryItem (index - 1) state.gameWorld.levelItems
+
+            if item <> None then
+                let newPlayerList =
+                    item.Value.item :: state.player.playerItems
+
+                let newGameWorldList =
+                    List.except (List.toSeq [ item.Value ]) state.gameWorld.levelItems
+
+                let returnState : State =
+                    state
+                    |> over (_player << _playerItems) (fun _ -> newPlayerList) // update player items
+                    |> over (_gameWorld << _levelItems) (fun _ -> newGameWorldList) // update world items
+
+                Choice1Of2 returnState
+            else
+                Choice2Of2 CannotParseInvalidCommand
+        else
+            Choice2Of2 CannotParseInvalidCommand
+
     //parsing the matched command
     let parseInput input =
         match input with
         | MoveMatch ->
-            printfn "Hit Move match, go where"
-            printf "-Move where > "
+            printf "%s" movePrompt
 
             let input = Console.ReadLine().Trim().ToLower()
 
             parseDirectionInput input //pass result of input to parse direction
-        | CheckMatch ->
-            //printfn "Hit Check match"
-            Choice1Of2 Check
-        | InvMatch ->
-            //printfn "Hit Inv match"
-            Choice1Of2 Inventory
-        | GrabMatch ->
-            Choice1Of2 Grab
+        | CheckMatch -> Choice1Of2 Check
+        | InvMatch -> Choice1Of2 Inventory
+        | GrabMatch -> Choice1Of2 Grab
         | HelpMatch -> Choice1Of2 Help
-        | QuitMatch ->
-            //printfn "Hit Quit match"
-            Choice1Of2 Quit
+        | QuitMatch -> Choice1Of2 Quit
         | _ -> Choice2Of2 CannotParseInvalidCommand
-
-    let grabItem (state: State)  =
-            printGameWorldItems state            //prints items at location with index + 1
-            printf "-Which item do you wish to grab? (Enter the number) > "
-
-            let (parsed, index) = Int32.TryParse (Console.ReadLine().Trim().ToLower())
-            if parsed then
-                let item = List.tryItem (index - 1) state.gameWorld.levelItems
-                if item <> None then
-                    let newPlayerList = item.Value.item :: state.player.playerItems 
-                    let newGameWorldList = List.except (List.toSeq [item.Value]) state.gameWorld.levelItems
-                    let returnState : State =
-                        state
-                        |> over (_player << _playerItems) (fun _ -> newPlayerList) // update player items
-                        |> over (_gameWorld << _levelItems) (fun _ -> newGameWorldList) // update world items
-                    Choice1Of2 returnState
-                else
-                Choice2Of2 CannotParseInvalidCommand
-            else
-                Choice2Of2 CannotParseInvalidCommand
-
+        
     //execute command
     let executeCommand state command =
         match command with
         | Move (x, y) ->
             match moveDir { x = x; y = y } state with
             | Choice1Of2 newState ->
-                printfn "New location = x:%i y:%i" state.player.location.x state.player.location.y
+                printNewLocation newState
                 Choice1Of2 newState
-            | Choice2Of2 _error -> Choice2Of2 CannotMove
+            | Choice2Of2 error -> Choice2Of2 error
         | Check ->
             printLocationData state
             printGameWorldItems state
-            
-            //prints exit options
-            match state.player.location.x, state.player.location.y with
-            | x, y when x = 0 && y = 0 ->
-                printfn "Available exits are S/E"
-                Choice1Of2 state
-            | x, _ when x = 0 ->
-                printfn "Available exits are N/E/S/"
-                Choice1Of2 state
-            | _, y when y = 0 ->
-                printfn "Available exits are E/S/W"
-                Choice1Of2 state
-            | x, y when
-                x = state.gameWorld.size.x
-                && y = state.gameWorld.size.y ->
-                printfn "Available exits are N/W"
-                Choice1Of2 state
-            | x, _ when x = state.gameWorld.size.x ->
-                printfn "Available exits are N/E/W"
-                Choice1Of2 state
-            | _, y when y = state.gameWorld.size.y ->
-                printfn "Available exits are N/S/W"
-                Choice1Of2 state
-            | _ ->
-                printfn "Available exits are N/E/S/W"
-                Choice1Of2 state
+            printExits state
+            Choice1Of2 state
         | Inventory ->
             printInv state
             Choice1Of2 state
         | Grab ->
+            printGameWorldItems state //prints items at location with index + 1
             if not state.gameWorld.levelItems.IsEmpty then
                 match grabItem state with
                 | Choice1Of2 newState ->
                     printInv newState
                     Choice1Of2 newState
-                | Choice2Of2 _error -> Choice2Of2 CannotParseInvalidCommand
+                | Choice2Of2 error -> Choice2Of2 error
             else
-                printfn "There are no items at this location"
                 Choice1Of2 state
         | Help ->
             printfn "%s" help //prints help

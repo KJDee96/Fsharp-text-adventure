@@ -1,8 +1,8 @@
 ﻿namespace Arcturus.Utils
 
 open System
-open Arcturus.Types.GameState
 open System.Threading
+open Arcturus.Types.GameState
 
 module Printing =
 
@@ -11,7 +11,7 @@ module Printing =
         | [] -> () //empty list with unit
         | head :: tail ->
             printf "%c" head //print head
-            // Thread.Sleep(1) //wait n miliseconds
+            Thread.Sleep(0) //wait n miliseconds
             writeSlowly tail //recursive call tail
 
     let help = "      Tutorial - Type M or Move to choose which direction to move.
@@ -40,9 +40,12 @@ module Printing =
         \n
         \n"
         + help
+    
+    let movePrompt = "-Move where > "
+    
+    let grabItemPrompt = "-Which item do you wish to grab? (Enter the number) > "
 
-
-    //user input with > while it waits for input
+    //user input prompt >
     let userInput =
         seq {
             while true do
@@ -77,3 +80,26 @@ module Printing =
             state.gameWorld.levelName
             state.player.location.x
             state.player.location.y
+            
+    let printNewLocation state =
+        printfn "New location = x:%i y:%i" state.player.location.x state.player.location.y
+
+    let printExits state =
+        //prints exit options
+        match state.player.location.x, state.player.location.y with
+        | x, y when x = 0 && y = 0 ->
+            printfn "Available exits are S/E"
+        | x, _ when x = 0 ->
+            printfn "Available exits are N/E/S/"
+        | _, y when y = 0 ->
+            printfn "Available exits are E/S/W"
+        | x, y when
+            x = state.gameWorld.size.x
+            && y = state.gameWorld.size.y ->
+            printfn "Available exits are N/W"
+        | x, _ when x = state.gameWorld.size.x ->
+            printfn "Available exits are N/E/W"
+        | _, y when y = state.gameWorld.size.y ->
+            printfn "Available exits are N/S/W"
+        | _ ->
+            printfn "Available exits are N/E/S/W"
