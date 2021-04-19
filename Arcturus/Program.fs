@@ -2,8 +2,8 @@
 open Arcturus.Utils.Errors
 open Arcturus.Utils.Printing
 open Arcturus.Types.GameState
+open Arcturus.Core.Commands
 open FSharpPlus
-open Commands
 
 module Program =
 

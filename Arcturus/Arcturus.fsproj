@@ -12,6 +12,7 @@
         <Compile Include="types\GameState.fs" />
         <Compile Include="utils\Printing.fs" />
         <Compile Include="utils\Errors.fs" />
+        <Compile Include="utils\PatternMatching.fs" />
         <Compile Include="Commands.fs" />
         <Compile Include="Program.fs" />
         <Content Include="..\.gitignore">

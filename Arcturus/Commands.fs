@@ -5,10 +5,10 @@ open Arcturus.Types.GameState
 open Arcturus.Types.Level
 open Arcturus.Utils.Errors
 open Arcturus.Utils.Printing
+open Arcturus.Utils.PatternMatching
 open FSharpPlus
 open FSharpPlus.Lens
 open System
-open System.Text.RegularExpressions
 
 module Commands =
 
@@ -19,52 +19,6 @@ module Commands =
         | Grab
         | Help
         | Quit
-
-    (*regex ^start
-        \s- whitespace
-        * - match 0 or more of the preceding token
-        (||) - capture group with alternation
-        {0,1} - match 0 or 1 of the preceding token
-        $end*)
-    let northPattern = "^\s*(n|north|N|North)\s*$"
-    let eastPattern = "^\s*(e|east|E|East)\s*$"
-    let southPattern = "^\s*(s|south|S|South)\s*$"
-    let westPattern = "^\s*(w|west|W|West)\s*$"
-
-    let movePattern = "^\s*m(ove){0,1}\s*$"
-    let checkPattern = "^\s*(c|C)(heck){0,1}\s*$"
-    let invPattern = "^\s*(i|I)(nv|nventory){0,1}\s*$"
-    let GrabPattern = "^\s*(g|G)(rab){0,1}\s*$"
-    let helpPattern = "^\s*(h|H)(elp){0,1}\s*$"
-    let quitPattern = "^\s*(q|Q)(uit){0,1}\s*$"
-
-    //matching the regex for commands
-    let (|MoveMatch|CheckMatch|InvMatch|GrabMatch|HelpMatch|QuitMatch|NoMatch|) input =
-        match Regex.Match(input, movePattern),
-              Regex.Match(input, checkPattern),
-              Regex.Match(input, invPattern),
-              Regex.Match(input, GrabPattern),
-              Regex.Match(input, helpPattern),
-              Regex.Match(input, quitPattern) with
-        | moveMatch, _, _, _, _, _ when moveMatch.Success -> MoveMatch
-        | _, checkMatch, _, _, _, _ when checkMatch.Success -> CheckMatch
-        | _, _, invMatch, _, _, _ when invMatch.Success -> InvMatch
-        | _, _, _, grabMatch, _, _ when grabMatch.Success -> GrabMatch
-        | _, _, _, _, helpMatch, _ when helpMatch.Success -> HelpMatch
-        | _, _, _, _, _, quitMatch when quitMatch.Success -> QuitMatch
-        | _ -> NoMatch
-
-    //matching the regex for directions
-    let (|NorthMatch|EastMatch|SouthMatch|WestMatch|NoMatch|) input =
-        match Regex.Match(input, northPattern),
-              Regex.Match(input, eastPattern),
-              Regex.Match(input, southPattern),
-              Regex.Match(input, westPattern) with
-        | northMatch, _, _, _ when northMatch.Success -> NorthMatch
-        | _, eastMatch, _, _ when eastMatch.Success -> EastMatch
-        | _, _, southMatch, _ when southMatch.Success -> SouthMatch
-        | _, _, _, westMatch when westMatch.Success -> WestMatch
-        | _ -> NoMatch
 
     //returning state for player movement
     let moveDir (dir: Coordinates) (state: State) =
@@ -83,24 +37,7 @@ module Commands =
                 over (_player << _location) (fun _ -> newLocation) state // update player location and then the player gamestate
 
             Choice1Of2 returnState
-
-    //parsing the matched direction command
-    let parseDirectionInput input =
-        match input with
-        | NorthMatch ->
-            let d = (0, -1)
-            Choice1Of2(Move d) //MoveN
-        | EastMatch ->
-            let d = (1, 0)
-            Choice1Of2(Move d)
-        | WestMatch ->
-            let d = (-1, 0)
-            Choice1Of2(Move d)
-        | SouthMatch ->
-            let d = (0, 1)
-            Choice1Of2(Move d)
-        | _ -> Choice2Of2 CannotMatchCompass
-
+            
     let grabItem (state: State) =
         printf "%s" grabItemPrompt
 
@@ -127,6 +64,24 @@ module Commands =
         else
             Choice2Of2 CannotParseInvalidCommand
 
+
+    //parsing the matched direction command
+    let parseDirectionInput input =
+        match input with
+        | NorthMatch ->
+            let d = (0, -1)
+            Choice1Of2(Move d) //MoveN
+        | EastMatch ->
+            let d = (1, 0)
+            Choice1Of2(Move d)
+        | WestMatch ->
+            let d = (-1, 0)
+            Choice1Of2(Move d)
+        | SouthMatch ->
+            let d = (0, 1)
+            Choice1Of2(Move d)
+        | _ -> Choice2Of2 CannotMatchCompass
+
     //parsing the matched command
     let parseInput input =
         match input with
@@ -148,9 +103,9 @@ module Commands =
         match command with
         | Move (x, y) ->
             match moveDir { x = x; y = y } state with
-            | Choice1Of2 newState ->
-                printNewLocation newState
-                Choice1Of2 newState
+            | Choice1Of2 state ->
+                printNewLocation state
+                Choice1Of2 state
             | Choice2Of2 error -> Choice2Of2 error
         | Check ->
             printLocationData state
@@ -164,9 +119,9 @@ module Commands =
             printGameWorldItems state //prints items at location with index + 1
             if not state.gameWorld.levelItems.IsEmpty then
                 match grabItem state with
-                | Choice1Of2 newState ->
-                    printInv newState
-                    Choice1Of2 newState
+                | Choice1Of2 state ->
+                    printInv state
+                    Choice1Of2 state
                 | Choice2Of2 error -> Choice2Of2 error
             else
                 Choice1Of2 state
