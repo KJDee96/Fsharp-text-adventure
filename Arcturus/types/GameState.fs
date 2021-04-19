@@ -1,15 +1,14 @@
 ﻿namespace Arcturus.Types
 
-open GameWorld
-open Items
-open Levels
-open Player
+open Arcturus.Types.Level
+open Arcturus.Types.Items
+open Arcturus.Types.Player
 open FSharpPlus.Lens
 
 module GameState =
     type State =
         { player: Player
-          gameWorld: GameWorld }
+          gameWorld: Level }
 
     //Prism for State type
     let inline _player f state =
@@ -26,18 +25,8 @@ module GameState =
                 y = level.startLocation.y }
           playerItems = [ keycard ] }
 
-    let getInitialGameWorld (level: Level) =
-        { size = level.size
-          levelName = level.levelName
-          floorNumber = level.floorNum
-          startLocation = level.startLocation
-          levelItems = level.levelItems }
 
     let getInitialState =
-        { player = getInitialPlayer (floor_4)
-          gameWorld = getInitialGameWorld (floor_4) }
-
-    let getItemsAtLocation (location: Coordinates) (level: Level) =
-        level.levelItems
-        |> List.filter (fun i -> i.location = location)
-        |> List.map (fun il -> il.item)
+        { player = getInitialPlayer floor_4
+          gameWorld = floor_4 }
+       

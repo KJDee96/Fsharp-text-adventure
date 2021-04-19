@@ -1,9 +1,8 @@
 ﻿namespace Arcturus.Core
 
-open Arcturus.Types.Levels
 open Arcturus.Types.Player
 open Arcturus.Types.GameState
-open Arcturus.Types.GameWorld
+open Arcturus.Types.Level
 open Arcturus.Utils.Errors
 open Arcturus.Utils.Printing
 open FSharpPlus
@@ -105,7 +104,7 @@ module Commands =
     let grabItem (state: State) =
         printf "%s" grabItemPrompt
 
-        let (parsed, index) =
+        let parsed, index =
             Int32.TryParse(Console.ReadLine().Trim().ToLower())
 
         if parsed then
@@ -113,16 +112,14 @@ module Commands =
                 List.tryItem (index - 1) state.gameWorld.levelItems
 
             if item <> None then
-                let newPlayerList =
-                    item.Value.item :: state.player.playerItems
+                let newPlayerInventory = addItemToInv state.player item.Value.item
 
-                let newGameWorldList =
-                    List.except (List.toSeq [ item.Value ]) state.gameWorld.levelItems
+                let newGameWorldItemList = removeItemFromWorld state.gameWorld item.Value
 
                 let returnState : State =
                     state
-                    |> over (_player << _playerItems) (fun _ -> newPlayerList) // update player items
-                    |> over (_gameWorld << _levelItems) (fun _ -> newGameWorldList) // update world items
+                    |> over (_player << _playerItems) (fun _ -> newPlayerInventory) // update player items
+                    |> over (_gameWorld << _levelItems) (fun _ -> newGameWorldItemList) // update world items
 
                 Choice1Of2 returnState
             else

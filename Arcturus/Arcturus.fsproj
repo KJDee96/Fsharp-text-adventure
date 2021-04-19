@@ -7,9 +7,8 @@
 
     <ItemGroup>
         <Compile Include="types\Items.fs" />
-        <Compile Include="types\Levels.fs" />
+        <Compile Include="types\Level.fs" />
         <Compile Include="types\Player.fs" />
-        <Compile Include="types\GameWorld.fs" />
         <Compile Include="types\GameState.fs" />
         <Compile Include="utils\Printing.fs" />
         <Compile Include="utils\Errors.fs" />
