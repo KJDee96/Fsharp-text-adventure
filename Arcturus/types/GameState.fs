@@ -6,9 +6,9 @@ open Arcturus.Types.Player
 open FSharpPlus.Lens
 
 module GameState =
-    type State =
-        { player: Player
-          gameWorld: Level }
+    type state =
+        { player: player
+          gameWorld: level }
 
     //Prism for State type
     let inline _player f state =
@@ -23,13 +23,15 @@ module GameState =
         { name = ""
           inventory = [ keycard ]
           stats = {
-              Strength = (PlayerStat.create 1uy).Value
-              Perception = (PlayerStat.create 1uy).Value
-              Endurance = (PlayerStat.create 1uy).Value
-              Charisma = (PlayerStat.create 1uy).Value
-              Intelligence = (PlayerStat.create 1uy).Value
-              Agility = (PlayerStat.create 1uy).Value
-              Luck = (PlayerStat.create 1uy).Value}}
+              Strength = StatValue 1uy
+              Perception = StatValue 1uy
+              Endurance = StatValue 1uy
+              Charisma = StatValue 1uy
+              Intelligence = StatValue 1uy
+              Agility = StatValue 1uy
+              Luck = StatValue 1uy
+              }
+          }
         
     let getInitialState=
         { player = getInitialPlayer

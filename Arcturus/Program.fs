@@ -10,12 +10,8 @@ open FSharpPlus
 module Program = 
     let init () = getInitialState //initialiser for state
     
-    let startup =
-        let msg = opening
-        writeSlowly (List.ofSeq msg) // writeslowly passing in msg
-
     let input =
-        startup
+        writeSlowly (List.ofSeq opening) // writeslowly passing in msg
         seq {
             yield! userInput
         //sequence for input fold

@@ -1,17 +1,28 @@
 ﻿namespace Arcturus.Types
-open Arcturus.Types.PlayerStat
+
 open Arcturus.Types.Items
 open FSharpPlus.Lens
 
 module Player =
-    type Special = {
-        Strength: PlayerStat
-        Perception: PlayerStat
-        Endurance: PlayerStat
-        Charisma: PlayerStat
-        Intelligence: PlayerStat
-        Agility: PlayerStat
-        Luck: PlayerStat }
+    type statType =
+        |Strength
+        |Perception
+        |Endurance
+        |Charisma
+        |Intelligence
+        |Agility
+        |Luck
+
+    type playerStat = StatValue of uint8    
+        
+    type special = {
+        Strength: playerStat
+        Perception: playerStat
+        Endurance: playerStat
+        Charisma: playerStat
+        Intelligence: playerStat
+        Agility: playerStat
+        Luck: playerStat }
     
     let inline _strength f special =
         f special.Strength <&> fun s -> { special with Strength = s }
@@ -34,10 +45,10 @@ module Player =
     let inline _luck f special =
         f special.Luck <&> fun s -> { special with Luck = s }
 
-    type Player =
+    type player =
         { name: string
-          inventory: Item list
-          stats: Special}
+          inventory: item list
+          stats: special}
 
     let addItemToInv player item = item :: player.inventory
             

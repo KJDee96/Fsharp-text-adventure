@@ -1,8 +1,8 @@
 TYPES
 Player -> creatable user with stats
     - Name
-    - Inventory
-	- SPECIAL (max 10 in each stat) -> influences events (6 INT to hack a user terminal, 8 INT to bypass file encryption,
+    - Inventory : Item []
+	- SPECIAL (max 5 in each stat) -> influences events (3 INT to hack a user terminal, 4INT to bypass file encryption,
 								3 CHARISMA to persuade the robot bouncer)
 
 Ship -> abstract item, contains rooms
@@ -14,7 +14,7 @@ room: screen (the room the user is currently in) ->
 
 event : event (an interactable user event) ->
 	- title
-	- path	-> ID : num + option numeric (1, 2a, 2b)
+	- paths	-> ID : num + option numeric (1, 2a, 2b)
 		-> text
 		-> result (leads to new path or ends event)
 	- current_path (to come back later if need be)

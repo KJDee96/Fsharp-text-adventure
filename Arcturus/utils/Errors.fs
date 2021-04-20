@@ -1,6 +1,6 @@
 ﻿namespace Arcturus.Utils
 module Errors = 
-    type Error =
+    type error =
         |CannotParseInvalidCommand
         |CannotMove
         |CannotMatchCompass

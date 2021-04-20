@@ -44,7 +44,7 @@ module Commands =
 //
 //            Choice1Of2 returnState
             
-    let grabItem (state: State) =
+    let grabItem (state: state) =
         printf "%s" grabItemPrompt
 
         let parsed, index =
@@ -59,7 +59,7 @@ module Commands =
 
                 let newGameWorldItemList = removeItemFromWorld state.gameWorld item.Value
 
-                let returnState : State =
+                let returnState : state =
                     state
                     |> over (_player << _playerItems) (fun _ -> newPlayerInventory) // update player items
                     |> over (_gameWorld << _levelItems) (fun _ -> newGameWorldItemList) // update world items

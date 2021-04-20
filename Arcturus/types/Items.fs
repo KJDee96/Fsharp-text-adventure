@@ -2,7 +2,7 @@
 
 module Items =
 
-    type Item = { name: string; description: string }
+    type item = { name: string; description: string }
 
     let wrench =
         { name = "Wrench"

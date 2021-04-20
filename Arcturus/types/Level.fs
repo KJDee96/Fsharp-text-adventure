@@ -3,16 +3,16 @@ open Arcturus.Types.Items
 open FSharpPlus.Lens
 
 module Level =
-    type Coordinates = { x: int; y: int }
+    type coordinates = { x: int; y: int }
 
-    type ItemLocation = { item: Item; location: Coordinates }
+    type itemLocation = { item: item; location: coordinates }
 
-    type Level = {
-        size: Coordinates;
+    type level = {
+        size: coordinates;
         levelName: string;
         floorNumber: int;
-        startLocation: Coordinates;
-        levelItems: ItemLocation list
+        startLocation: coordinates;
+        levelItems: itemLocation list
     }
     
     let floor_4 =

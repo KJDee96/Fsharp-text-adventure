@@ -9,8 +9,8 @@
         <Compile Include="res\Strings.fs" />
         <Compile Include="types\Items.fs" />
         <Compile Include="types\Level.fs" />
-        <Compile Include="types\PlayerStat.fs" />
         <Compile Include="types\Player.fs" />
+        <Compile Include="types\Event.fs" />
         <Compile Include="types\GameState.fs" />
         <Compile Include="utils\Printing.fs" />
         <Compile Include="utils\Errors.fs" />
