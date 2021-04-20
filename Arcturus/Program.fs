@@ -1,19 +1,22 @@
 ﻿namespace Arcturus.Core
+
+open Arcturus.Res.Strings
 open Arcturus.Utils.Errors
 open Arcturus.Utils.Printing
 open Arcturus.Types.GameState
 open Arcturus.Core.Commands
 open FSharpPlus
 
-module Program =
-
+module Program = 
     let init () = getInitialState //initialiser for state
-
+    
+    let startup =
+        let msg = opening
+        writeSlowly (List.ofSeq msg) // writeslowly passing in msg
 
     let input =
+        startup
         seq {
-            let msg = opening
-            writeSlowly (List.ofSeq msg) // writeslowly passing in msg
             yield! userInput
         //sequence for input fold
         }
@@ -30,20 +33,22 @@ module Program =
                 match error with
                 //printing errors
                 | CannotParseInvalidCommand ->
-                    printfn "%s" "ERROR: Cannot parse input, invalid command"
+                    printfn "%s" errorInputString
                     state
                 | CannotMove ->
-                    printfn "%s" "ERROR: No more rooms to move to that way"
+                    printfn "%s" errorNoRoomsString
                     state
                 | CannotMatchCompass ->
-                    printfn "%s" "ERROR: Cannot match a compass direction - N/E/S/W"
+                    printfn "%s" errorDirectionString
                     state
 
     [<EntryPoint>]
     let main argv =
+        let gamestate = init () |> setName
+        
         input //call input function
         //fold sequence for input
-        |> Seq.fold parseAndExecute (init ())
+        |> Seq.fold parseAndExecute (gamestate)
         |> ignore
 
         0 // return an integer exit code

@@ -1,5 +1,6 @@
 ﻿namespace Arcturus.Core
 
+open Arcturus.Res.Strings
 open Arcturus.Types.Player
 open Arcturus.Types.GameState
 open Arcturus.Types.Level
@@ -20,23 +21,28 @@ module Commands =
         | Help
         | Quit
 
+    let setName state =
+        printf "%s" setNamePrompt
+        let name = Console.ReadLine()
+        over (_player << _name) (fun _ -> name) state // update player name 
+
     //returning state for player movement
-    let moveDir (dir: Coordinates) (state: State) =
-        let newLocation =
-            { state.player.location with
-                  x = state.player.location.x + dir.x
-                  y = state.player.location.y + dir.y }
-
-        if newLocation.x > state.gameWorld.size.x
-           || newLocation.y > state.gameWorld.size.y then
-            Choice2Of2 CannotMove
-        else if newLocation.x = -1 || newLocation.y = -1 then
-            Choice2Of2 CannotMove
-        else
-            let returnState : State =
-                over (_player << _location) (fun _ -> newLocation) state // update player location and then the player gamestate
-
-            Choice1Of2 returnState
+//    let moveDir (dir: Coordinates) (state: State) =
+//        let newLocation =
+//            { state.player.location with
+//                  x = state.player.location.x + dir.x
+//                  y = state.player.location.y + dir.y }
+//
+//        if newLocation.x > state.gameWorld.size.x
+//           || newLocation.y > state.gameWorld.size.y then
+//            Choice2Of2 CannotMove
+//        else if newLocation.x = -1 || newLocation.y = -1 then
+//            Choice2Of2 CannotMove
+//        else
+//            let returnState : State =
+//                over (_player << _location) (fun _ -> newLocation) state // update player location and then the player gamestate
+//
+//            Choice1Of2 returnState
             
     let grabItem (state: State) =
         printf "%s" grabItemPrompt
@@ -102,15 +108,16 @@ module Commands =
     let executeCommand state command =
         match command with
         | Move (x, y) ->
-            match moveDir { x = x; y = y } state with
-            | Choice1Of2 state ->
-                printNewLocation state
-                Choice1Of2 state
-            | Choice2Of2 error -> Choice2Of2 error
+//            match moveDir { x = x; y = y } state with
+//            | Choice1Of2 state ->
+//                printNewLocation state
+//                Choice1Of2 state
+//            | Choice2Of2 error -> Choice2Of2 error
+            Choice1Of2 state
         | Check ->
-            printLocationData state
-            printGameWorldItems state
-            printExits state
+//            printLocationData state
+//            printGameWorldItems state
+//            printExits state
             Choice1Of2 state
         | Inventory ->
             printInv state

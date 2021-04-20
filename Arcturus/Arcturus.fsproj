@@ -6,8 +6,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Include="res\Strings.fs" />
         <Compile Include="types\Items.fs" />
         <Compile Include="types\Level.fs" />
+        <Compile Include="types\PlayerStat.fs" />
         <Compile Include="types\Player.fs" />
         <Compile Include="types\GameState.fs" />
         <Compile Include="utils\Printing.fs" />
@@ -21,6 +23,7 @@
         <Content Include="..\fsharp_game.txt">
           <Link>fsharp_game.txt</Link>
         </Content>
+        
 
     </ItemGroup>
 

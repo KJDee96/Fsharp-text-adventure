@@ -19,14 +19,19 @@ module GameState =
         f state.gameWorld
         <&> fun gameWorld -> { state with gameWorld = gameWorld }
 
-    let getInitialPlayer (level: Level) =
-        { location =
-              { x = level.startLocation.x
-                y = level.startLocation.y }
-          playerItems = [ keycard ] }
-
-
-    let getInitialState =
-        { player = getInitialPlayer floor_4
+    let getInitialPlayer  =
+        { name = ""
+          inventory = [ keycard ]
+          stats = {
+              Strength = (PlayerStat.create 1uy).Value
+              Perception = (PlayerStat.create 1uy).Value
+              Endurance = (PlayerStat.create 1uy).Value
+              Charisma = (PlayerStat.create 1uy).Value
+              Intelligence = (PlayerStat.create 1uy).Value
+              Agility = (PlayerStat.create 1uy).Value
+              Luck = (PlayerStat.create 1uy).Value}}
+        
+    let getInitialState=
+        { player = getInitialPlayer
           gameWorld = floor_4 }
        
