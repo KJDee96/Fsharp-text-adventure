@@ -14,16 +14,22 @@ module Event =
 
     
     type path = {
-        id: int
         text: string
-        nextPath: path option
+        nextPath: int option
         pathRequirement: pathRequirement option
     }
    
     type event = {
         title: string
-        startPath: path
-        currentPath: path
+        paths: path list
+        currentPath: int 
         finished: bool
         eventResult: eventResult option
-    }
+    } with
+        member this.checkFinish =
+            if (List.item this.currentPath this.paths).nextPath = None
+            then true
+            else false
+            
+    let path1 = {text="test";nextPath=None;pathRequirement=None}
+    let event1 = {title="eventTest";paths=[path1];currentPath=0;finished=false;eventResult=None}
