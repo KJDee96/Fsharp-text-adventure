@@ -8,28 +8,42 @@ module Event =
         | Item of item
         | StatIncrease of statType * playerStat
         
-    type pathRequirement =
+    type responseRequirement =
         | Item of item
         | StatCheck of statType * playerStat
-
     
+    type response = {
+        text: string
+        next: int option
+        requirement: responseRequirement option
+    }
     type path = {
         text: string
-        nextPath: int option
-        pathRequirement: pathRequirement option
+        options: response list option
+        result: eventResult option
     }
-   
+      
     type event = {
         title: string
         paths: path list
-        currentPath: int 
+        currentPath: int
         finished: bool
-        eventResult: eventResult option
-    } with
-        member this.checkFinish =
-            if (List.item this.currentPath this.paths).nextPath = None
+    } with member this.checkFinish =
+            if (List.item this.currentPath this.paths).options = None
             then true
             else false
-            
-    let path1 = {text="test";nextPath=None;pathRequirement=None}
-    let event1 = {title="eventTest";paths=[path1];currentPath=0;finished=false;eventResult=None}
+
+    let event1 = {
+        title = "Test Event"
+        paths = [{
+            text = "There is a computer, what do you do?"
+            options = Some [{text = "Hack it"; next = Some 1; requirement = Some (StatCheck (Intelligence, StatValue 6uy))}
+                            {text = "Break it"; next = Some 2; requirement = Some (Item wrench)}]
+            result = None};
+                       
+                       {text = "You hack it successfully"
+                        options = None
+                        result = Some (StatIncrease (Strength, StatValue 1uy))}]
+        currentPath = 0
+        finished = false
+    }
