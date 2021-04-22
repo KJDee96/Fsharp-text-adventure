@@ -29,9 +29,9 @@ module Event =
         currentPath: int
         finished: bool
     } with member this.checkFinish =
-            if (List.item this.currentPath this.paths).options = None
-            then true
-            else false
+            match (List.item this.currentPath this.paths).options with
+            | None -> true
+            | _ -> false
 
     let event1 = {
         title = "Test Event"
