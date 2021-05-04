@@ -7,15 +7,12 @@ open Arcturus.Types.GameState
 open Arcturus.Core.Commands
 open FSharpPlus
 
-module Program = 
+module Program =
     let init () = getInitialState //initialiser for state
-    
+
     let input =
         writeSlowly (List.ofSeq opening) // writeslowly passing in msg
-        seq {
-            yield! userInput
-        //sequence for input fold
-        }
+        seq { yield! userInput }
 
     //parse and execute with state as input
     let parseAndExecute state =
@@ -40,11 +37,11 @@ module Program =
 
     [<EntryPoint>]
     let main argv =
-        let gamestate = init () |> setName
-        
+        let gameState = init () |> setName
+
         input //call input function
         //fold sequence for input
-        |> Seq.fold parseAndExecute (gamestate)
+        |> Seq.fold parseAndExecute (gameState)
         |> ignore
 
         0 // return an integer exit code

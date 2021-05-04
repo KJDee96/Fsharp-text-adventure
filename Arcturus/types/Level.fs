@@ -1,4 +1,5 @@
 ﻿namespace Arcturus.Types
+
 open Arcturus.Types.Items
 open FSharpPlus.Lens
 
@@ -7,14 +8,13 @@ module Level =
 
     type itemLocation = { item: item; location: coordinates }
 
-    type level = {
-        size: coordinates;
-        levelName: string;
-        floorNumber: int;
-        startLocation: coordinates;
-        levelItems: itemLocation list
-    }
-    
+    type level =
+        { size: coordinates
+          levelName: string
+          floorNumber: int
+          startLocation: coordinates
+          levelItems: itemLocation list }
+
     let floor_4 =
         { size = { x = 2; y = 4 }
           levelName = "Cryo and Power"
@@ -33,11 +33,32 @@ module Level =
               [ { item = hammer
                   location = { x = 0; y = 2 } } ] }
 
-    let removeItemFromWorld world item = List.except (List.toSeq [ item ]) world.levelItems
-    
+    let removeItemFromWorld world item =
+        List.except (List.toSeq [ item ]) world.levelItems
+
     //Prism for gameWorld type
-    let inline _size  f gameWorld = f gameWorld.size <&> fun size -> { gameWorld with size = size }
-    let inline _levelName  f gameWorld = f gameWorld.levelName <&> fun levelName -> { gameWorld with levelName = levelName }
-    let inline _floorNumber  f gameWorld = f gameWorld.floorNumber <&> fun floorNumber -> { gameWorld with floorNumber = floorNumber }
-    let inline _startLocation  f gameWorld = f gameWorld.startLocation <&> fun startLocation -> { gameWorld with startLocation = startLocation }
-    let inline _levelItems  f gameWorld = f gameWorld.levelItems <&> fun levelItems -> { gameWorld with levelItems = levelItems }
+    let inline _size f gameWorld =
+        f gameWorld.size
+        <&> fun size -> { gameWorld with size = size }
+
+    let inline _levelName f gameWorld =
+        f gameWorld.levelName
+        <&> fun levelName -> { gameWorld with levelName = levelName }
+
+    let inline _floorNumber f gameWorld =
+        f gameWorld.floorNumber
+        <&> fun floorNumber ->
+                { gameWorld with
+                      floorNumber = floorNumber }
+
+    let inline _startLocation f gameWorld =
+        f gameWorld.startLocation
+        <&> fun startLocation ->
+                { gameWorld with
+                      startLocation = startLocation }
+
+    let inline _levelItems f gameWorld =
+        f gameWorld.levelItems
+        <&> fun levelItems ->
+                { gameWorld with
+                      levelItems = levelItems }

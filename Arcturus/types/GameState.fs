@@ -19,7 +19,7 @@ module GameState =
         f state.gameWorld
         <&> fun gameWorld -> { state with gameWorld = gameWorld }
 
-    let getInitialPlayer  =
+    let getInitialPlayer =
         { name = ""
           inventory = [ keycard ]
           stats = {
@@ -33,7 +33,7 @@ module GameState =
               }
           }
         
-    let getInitialState=
+    let getInitialState =
         { player = getInitialPlayer
           gameWorld = floor_4 }
        

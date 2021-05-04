@@ -24,7 +24,7 @@ module Commands =
     let setName state =
         printf "%s" setNamePrompt
         let name = Console.ReadLine()
-        over (_player << _name) (fun _ -> name) state // update player name 
+        over (_player << _name) (fun _ -> name) state // update player name
 
     //returning state for player movement
 //    let moveDir (dir: Coordinates) (state: State) =
@@ -43,7 +43,7 @@ module Commands =
 //                over (_player << _location) (fun _ -> newLocation) state // update player location and then the player gamestate
 //
 //            Choice1Of2 returnState
-            
+
     let grabItem (state: state) =
         printf "%s" grabItemPrompt
 
@@ -55,9 +55,11 @@ module Commands =
                 List.tryItem (index - 1) state.gameWorld.levelItems
 
             if item <> None then
-                let newPlayerInventory = addItemToInv state.player item.Value.item
+                let newPlayerInventory =
+                    addItemToInv state.player item.Value.item
 
-                let newGameWorldItemList = removeItemFromWorld state.gameWorld item.Value
+                let newGameWorldItemList =
+                    removeItemFromWorld state.gameWorld item.Value
 
                 let returnState : state =
                     state
@@ -103,19 +105,19 @@ module Commands =
         | HelpMatch -> Choice1Of2 Help
         | QuitMatch -> Choice1Of2 Quit
         | _ -> Choice2Of2 CannotParseInvalidCommand
-        
+
     //execute command
     let executeCommand state command =
         match command with
         | Move (x, y) ->
-//            match moveDir { x = x; y = y } state with
+            //            match moveDir { x = x; y = y } state with
 //            | Choice1Of2 state ->
 //                printNewLocation state
 //                Choice1Of2 state
 //            | Choice2Of2 error -> Choice2Of2 error
             Choice1Of2 state
         | Check ->
-//            printLocationData state
+            //            printLocationData state
 //            printGameWorldItems state
 //            printExits state
             Choice1Of2 state
@@ -124,6 +126,7 @@ module Commands =
             Choice1Of2 state
         | Grab ->
             printGameWorldItems state //prints items at location with index + 1
+
             if not state.gameWorld.levelItems.IsEmpty then
                 match grabItem state with
                 | Choice1Of2 state ->

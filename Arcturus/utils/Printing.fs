@@ -31,7 +31,7 @@ module Printing =
             |> Seq.iter (fun item -> printfn "You have a %s, Description = %s" item.name item.description)
         else
             printfn "%s" noItemsInvString
-            
+
     let printGameWorldItems state =
         if not state.gameWorld.levelItems.IsEmpty then
             //prints items at location
@@ -51,7 +51,7 @@ module Printing =
 //            state.gameWorld.levelName
 //            state.player.location.x
 //            state.player.location.y
-//            
+//
 //    let printNewLocation state =
 //        printfn "New location = x:%i y:%i" state.player.location.x state.player.location.y
 //

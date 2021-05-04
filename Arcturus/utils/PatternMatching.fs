@@ -1,6 +1,7 @@
 namespace Arcturus.Utils
 
 open System.Text.RegularExpressions
+
 module PatternMatching =
     (*regex ^start
         \s- whitespace
@@ -9,6 +10,7 @@ module PatternMatching =
         {0,1} - match 0 or 1 of the preceding token
         $end*)
     let northPattern = "^\s*(n|north|N|North)\s*$"
+
     let eastPattern = "^\s*(e|east|E|East)\s*$"
     let southPattern = "^\s*(s|south|S|South)\s*$"
     let westPattern = "^\s*(w|west|W|West)\s*$"

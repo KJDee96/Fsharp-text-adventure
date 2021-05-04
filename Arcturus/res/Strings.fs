@@ -27,14 +27,22 @@ module Strings =
         \n
         \n"
         + help
-    
+
     let movePrompt = "-Move where > "
     let setNamePrompt = "-Enter the name of your character > "
-    let grabItemPrompt = "-Which item do you wish to grab? (Enter the number) > "
-    let itemsLocationPrompt= "The items here are: "
+
+    let grabItemPrompt =
+        "-Which item do you wish to grab? (Enter the number) > "
+
+    let itemsLocationPrompt = "The items here are: "
     let noItemsLocationString = "There are no items at this location"
     let noItemsInvString = "You don't have any items"
 
-    let errorInputString = "ERROR: Cannot parse input, invalid command"
-    let errorNoRoomsString = "ERROR: No more rooms to move to that way"
-    let errorDirectionString = "ERROR: Cannot match a compass direction - N/E/S/W"
+    let errorInputString =
+        "ERROR: Cannot parse input, invalid command"
+
+    let errorNoRoomsString =
+        "ERROR: No more rooms to move to that way"
+
+    let errorDirectionString =
+        "ERROR: Cannot match a compass direction - N/E/S/W"
