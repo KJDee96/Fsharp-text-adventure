@@ -3,6 +3,7 @@
 open System
 open System.Threading
 open Arcturus.Types.GameState
+open Arcturus.Types.Event
 open Arcturus.Res.Strings
 
 module Printing =
@@ -43,6 +44,21 @@ module Printing =
                     printfn "[%i] Name = %s, Description = %s \n" (index + 1) items.item.name items.item.description)
         else
             printfn "%s" noItemsLocationString
+    
+    let printEventTitle (event: event) = printfn "%s" event.title
+    
+    let printEventTitlePrompt (event: event) = printf "%s" event.title
+    
+    let printPathText (path: path) = printfn "%s" path.text
+
+    let printPathOptions path =
+        List.indexed path.options.Value
+        |> List.iter (fun (index, option) -> printfn "[%i] %s" (index + 1) option.text)
+
+    let printEventPath (event: event) =
+        match event.checkFinish with
+        | false -> printPathOptions event.getPath
+        | _ -> printPathText event.getPath
 
 //    let printLocationData state =
 //        //prints floor name, location data
