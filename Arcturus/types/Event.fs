@@ -2,15 +2,16 @@
 
 open Arcturus.Types.Items
 open Arcturus.Types.Player
+open FSharpPlus.Lens
 
 module Event =
     type eventResult =
         | Item of item
-        | StatIncrease of statType * playerStat
+        | StatIncrease of playerStat
 
     type responseRequirement =
         | Item of item
-        | StatCheck of statType * playerStat
+        | StatCheck of playerStat
 
     type response =
         { text: string
@@ -27,10 +28,28 @@ module Event =
           paths: path list
           currentPath: int
           finished: bool }
+        member this.getPath = this.paths.[this.currentPath]
+
         member this.checkFinish =
             match (List.item this.currentPath this.paths).options with
             | None -> true
             | _ -> false
+            
+    let inline _currentPath f event =
+        f event.currentPath
+        <&> fun currentPath -> { event with currentPath = currentPath }
+
+    let eventUpdateCurrentPath (event: event) response =
+        match event.checkFinish with
+        | false ->
+            over _currentPath (fun _ -> response.next.Value) event
+        | _ -> event
+
+
+    let doNothingPath =
+        { text = "Come back later"
+          next = None
+          requirement = None }
 
     let event1 =
         { title = "Test Event"
@@ -42,11 +61,21 @@ module Event =
                                requirement = Some(StatCheck(Intelligence, StatValue 6uy)) }
                              { text = "Break it"
                                next = Some 2
-                               requirement = Some(Item wrench) } ]
+                               requirement = Some(Item wrench) }
+                             doNothingPath ]
                   result = None }
 
-                { text = "You hack it successfully"
+                { text = "You hack the computer successfully"
+                  options = None
+                  result = Some(StatIncrease(Intelligence, StatValue 1uy)) }
+
+                { text = "You smash the computer"
                   options = None
                   result = Some(StatIncrease(Strength, StatValue 1uy)) } ]
           currentPath = 0
           finished = false }
+
+    let testResponse : response =
+        { text = "Hack it"
+          next = Some 1
+          requirement = Some(StatCheck(Intelligence, StatValue 6uy)) }
