@@ -1,9 +1,10 @@
-﻿namespace Arcturus.Core
+namespace Arcturus.Core
 
 open Arcturus.Res.Strings
 open Arcturus.Types.Player
 open Arcturus.Types.GameState
 open Arcturus.Types.Level
+open Arcturus.Types.Event
 open Arcturus.Utils.Errors
 open Arcturus.Utils.Printing
 open Arcturus.Utils.PatternMatching
@@ -19,6 +20,7 @@ module Commands =
         | Inventory
         | Grab
         | Help
+        | EventPathChoice of int
         | Quit
 
     let setName state =
@@ -26,8 +28,26 @@ module Commands =
         let name = Console.ReadLine()
         over (_player << _name) (fun _ -> name) state // update player name
 
+    let testEventCycle (state: state) =
+        let event = state.gameWorld.event.Value
+        let path = event.getPath
+
+        printEventTitle event
+        printPathText path
+        printPathOptions path
+
+        state
+
+    let checkForEvent (state: state) =
+        match state.gameWorld.event with
+        | None -> Choice1Of2 state
+        | _ ->
+            let newState = testEventCycle (setInEvent state)
+            Choice1Of2 newState
+
+
     //returning state for player movement
-//    let moveDir (dir: Coordinates) (state: State) =
+//    let moveDir (dir: coordinates) (state: state) =
 //        let newLocation =
 //            { state.player.location with
 //                  x = state.player.location.x + dir.x
@@ -91,8 +111,8 @@ module Commands =
         | _ -> Choice2Of2 CannotMatchCompass
 
     //parsing the matched command
-    let parseInput input =
-        match input with
+    let parseInput (input: string) =
+        match input.Trim() with
         | MoveMatch ->
             printf "%s" movePrompt
 
@@ -103,41 +123,68 @@ module Commands =
         | InvMatch -> Choice1Of2 Inventory
         | GrabMatch -> Choice1Of2 Grab
         | HelpMatch -> Choice1Of2 Help
+        | DigitMatch ->
+            let _parsed, input = Int32.TryParse input
+            Choice1Of2(EventPathChoice input)
         | QuitMatch -> Choice1Of2 Quit
         | _ -> Choice2Of2 CannotParseInvalidCommand
-
+        
     //execute command
     let executeCommand state command =
-        match command with
-        | Move (x, y) ->
-            //            match moveDir { x = x; y = y } state with
-//            | Choice1Of2 state ->
-//                printNewLocation state
-//                Choice1Of2 state
-//            | Choice2Of2 error -> Choice2Of2 error
-            Choice1Of2 state
-        | Check ->
-            //            printLocationData state
-//            printGameWorldItems state
-//            printExits state
-            Choice1Of2 state
-        | Inventory ->
-            printInv state
-            Choice1Of2 state
-        | Grab ->
-            printGameWorldItems state //prints items at location with index + 1
-
-            if not state.gameWorld.levelItems.IsEmpty then
-                match grabItem state with
-                | Choice1Of2 state ->
-                    printInv state
-                    Choice1Of2 state
+        if not state.inEvent then
+            match command with
+            | Move (x, y) ->
+                //            match moveDir { x = x; y = y } state with
+                //            | Choice1Of2 state ->
+                //                printNewLocation state
+                //                Choice1Of2 state
+                //            | Choice2Of2 error -> Choice2Of2 error
+                match checkForEvent state with
+                | Choice1Of2 state -> Choice1Of2 state
                 | Choice2Of2 error -> Choice2Of2 error
-            else
+            | Check ->
+                //            printLocationData state
+                //            printGameWorldItems state
+                //            printExits state
                 Choice1Of2 state
-        | Help ->
-            printfn "%s" help //prints help
-            Choice1Of2 state
-        | Quit ->
-            Environment.Exit(0) //exits
-            Choice1Of2 state
+            | Inventory ->
+                printInv state
+                Choice1Of2 state
+            | Grab ->
+                printGameWorldItems state //prints items at location with index + 1
+
+                if not state.gameWorld.levelItems.IsEmpty then
+                    match grabItem state with
+                    | Choice1Of2 state ->
+                        printInv state
+                        Choice1Of2 state
+                    | Choice2Of2 error -> Choice2Of2 error
+                else
+                    Choice1Of2 state
+            | Help ->
+                printfn "%s" help //prints help
+                Choice1Of2 state
+            | Quit ->
+                Environment.Exit(0) //exits
+                Choice1Of2 state
+            | _ -> Choice2Of2 CannotParseInvalidCommand
+        else
+            match command with
+            | EventPathChoice input ->
+                // TODO check path requirement
+                let path =
+                    state.gameWorld.event.Value.getPath.options.Value.Item(input - 1)
+                // TODO check doNothingPath?
+                printfn "%s" path.text
+
+                let newState =
+                    state
+                    |> over
+                        (_gameWorld << _event)
+                        (fun _ -> Some(eventUpdateCurrentPath state.gameWorld.event.Value path))
+                
+                Choice1Of2 newState
+            | Quit ->
+                Environment.Exit(0) //exits
+                Choice1Of2 state
+            | _ -> Choice2Of2 CannotMatchEventChoice

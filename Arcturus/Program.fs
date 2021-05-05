@@ -8,11 +8,16 @@ open Arcturus.Core.Commands
 open FSharpPlus
 
 module Program =
-    let init () = getInitialState //initialiser for state
+    let init = getInitialState //initialiser for state
 
     let input =
         writeSlowly (List.ofSeq opening) // writeslowly passing in msg
         seq { yield! userInput }
+
+    let checkStateInEvent state =
+        match state.inEvent with
+        | true -> printEventTitlePrompt state.gameWorld.event.Value
+        | false -> ()
 
     //parse and execute with state as input
     let parseAndExecute state =
@@ -21,27 +26,36 @@ module Program =
         >=> executeCommand state
         >> fun x ->
             match x with
-            | Choice1Of2 state -> state
+            | Choice1Of2 state ->
+                checkStateInEvent state
+                state
             | Choice2Of2 error ->
                 match error with
                 //printing errors
                 | CannotParseInvalidCommand ->
-                    printfn "%s" errorInputString
+                    printfn "%s" errorCannotParseInvalidCommandString
+                    checkStateInEvent state
                     state
                 | CannotMove ->
-                    printfn "%s" errorNoRoomsString
+                    printfn "%s" errorCannotMoveString
+                    checkStateInEvent state
                     state
                 | CannotMatchCompass ->
-                    printfn "%s" errorDirectionString
+                    printfn "%s" errorCannotMatchCompassString
+                    checkStateInEvent state
                     state
-
+                | CannotMatchEventChoice ->
+                    printfn "%s" errorCannotMatchEventChoiceString
+                    checkStateInEvent state
+                    state
+                    
     [<EntryPoint>]
     let main argv =
-        let gameState = init () |> setName
-
+        let gameState = init |> setName
+        
         input //call input function
-        //fold sequence for input
-        |> Seq.fold parseAndExecute (gameState)
+            //fold sequence for input
+        |> Seq.fold parseAndExecute gameState
         |> ignore
 
         0 // return an integer exit code

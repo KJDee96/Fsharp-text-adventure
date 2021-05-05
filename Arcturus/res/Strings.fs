@@ -38,11 +38,14 @@ module Strings =
     let noItemsLocationString = "There are no items at this location"
     let noItemsInvString = "You don't have any items"
 
-    let errorInputString =
+    let errorCannotParseInvalidCommandString =
         "ERROR: Cannot parse input, invalid command"
 
-    let errorNoRoomsString =
+    let errorCannotMoveString =
         "ERROR: No more rooms to move to that way"
 
-    let errorDirectionString =
+    let errorCannotMatchCompassString =
         "ERROR: Cannot match a compass direction - N/E/S/W"
+        
+    let errorCannotMatchEventChoiceString =
+        "That was not a valid event choice"

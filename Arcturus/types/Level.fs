@@ -1,5 +1,6 @@
 ﻿namespace Arcturus.Types
 
+open Arcturus.Types.Event
 open Arcturus.Types.Items
 open FSharpPlus.Lens
 
@@ -13,7 +14,8 @@ module Level =
           levelName: string
           floorNumber: int
           startLocation: coordinates
-          levelItems: itemLocation list }
+          levelItems: itemLocation list
+          event: event option }
 
     let floor_4 =
         { size = { x = 2; y = 4 }
@@ -22,16 +24,17 @@ module Level =
           startLocation = { x = 1; y = 3 }
           levelItems =
               [ { item = wrench
-                  location = { x = 1; y = 3 } } ] }
+                  location = { x = 1; y = 3 } } ]
+          event = Some event1 }
 
-    let floor_3 =
-        { size = { x = 0; y = 3 }
-          levelName = "Canteen and Storage"
-          floorNumber = 3
-          startLocation = { x = 0; y = 1 }
-          levelItems =
-              [ { item = hammer
-                  location = { x = 0; y = 2 } } ] }
+//    let floor_3 =
+//        { size = { x = 0; y = 3 }
+//          levelName = "Canteen and Storage"
+//          floorNumber = 3
+//          startLocation = { x = 0; y = 1 }
+//          levelItems =
+//              [ { item = hammer
+//                  location = { x = 0; y = 2 } } ] }
 
     let removeItemFromWorld world item =
         List.except (List.toSeq [ item ]) world.levelItems
@@ -62,3 +65,9 @@ module Level =
         <&> fun levelItems ->
                 { gameWorld with
                       levelItems = levelItems }
+
+    let inline _event f gameWorld =
+        f gameWorld.event
+        <&> fun event ->
+                { gameWorld with
+                      event = event }

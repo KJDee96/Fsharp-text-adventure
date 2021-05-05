@@ -1,5 +1,6 @@
 ﻿namespace Arcturus.Types
 
+open System
 open Arcturus.Types.Items
 open FSharpPlus.Lens
 
@@ -13,16 +14,18 @@ module Player =
         | Agility
         | Luck
 
-    type playerStat = StatValue of uint8
-
+    type playerStatValue = StatValue of uint8
+    
+    type playerStat = statType * playerStatValue
+    
     type special =
-        { Strength: playerStat
-          Perception: playerStat
-          Endurance: playerStat
-          Charisma: playerStat
-          Intelligence: playerStat
-          Agility: playerStat
-          Luck: playerStat }
+        { Strength: playerStatValue
+          Perception: playerStatValue
+          Endurance: playerStatValue
+          Charisma: playerStatValue
+          Intelligence: playerStatValue
+          Agility: playerStatValue
+          Luck: playerStatValue }
 
     let inline _strength f special =
         f special.Strength
@@ -55,8 +58,20 @@ module Player =
     type player =
         { name: string
           inventory: item list
-          stats: special }
-
+          stats: special } with
+        member this.hasItem (item: item) = List.tryFind (fun _ -> item = item) this.inventory
+//        member this.hasStat (requiredStat: playerStat) =
+//            let stat,requiredValue = requiredStat
+//            
+//            let specialProperties = typeof<special>.GetProperties ()
+//            let x = specialProperties |> Array.tryFind (fun t -> t.Name = stat.ToString ())
+//            let c = x |> Option.map (fun pi -> pi.GetValue this.stats) 
+//            
+//            Int32.TryParse(c.Value.ToString)
+            
+            
+//            playerstat = requiredStat
+        
     let addItemToInv player item = item :: player.inventory
 
     //Prism for player type

@@ -5,3 +5,4 @@ module Errors =
         | CannotParseInvalidCommand
         | CannotMove
         | CannotMatchCompass
+        | CannotMatchEventChoice

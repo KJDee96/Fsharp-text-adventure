@@ -35,3 +35,20 @@ moveScreenFunc newScreen =
 onEventComplete event =
     update event in gameState.eventData
     update event in screen.events []
+    
+    
+    
+eventLoop
+
+Print pathText
+Print options
+input = title > CHOICE
+
+path = input
+
+if path.options = None
+	perform event.result
+	exit loop
+else
+	currentPath = option.next
+	rec ^	
