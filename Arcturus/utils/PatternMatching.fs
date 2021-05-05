@@ -7,20 +7,21 @@ module PatternMatching =
         \s- whitespace
         * - match 0 or more of the preceding token
         (||) - capture group with alternation
-        {0,1} - match 0 or 1 of the preceding token
+        ? - match 0 or 1 of the preceding token
         $end*)
-    let northPattern = "^\s*(n|north|N|North)\s*$"
+    let northPattern = "^(n|north|N|North)$"
 
-    let eastPattern = "^\s*(e|east|E|East)\s*$"
-    let southPattern = "^\s*(s|south|S|South)\s*$"
-    let westPattern = "^\s*(w|west|W|West)\s*$"
+    let eastPattern = "^(e|east|E|East)$"
+    let southPattern = "^(s|south|S|South)$"
+    let westPattern = "^(w|west|W|West)$"
 
-    let movePattern = "^\s*m(ove){0,1}\s*$"
-    let checkPattern = "^\s*(c|C)(heck){0,1}\s*$"
-    let invPattern = "^\s*(i|I)(nv|nventory){0,1}\s*$"
-    let GrabPattern = "^\s*(g|G)(rab){0,1}\s*$"
-    let helpPattern = "^\s*(h|H)(elp){0,1}\s*$"
-    let quitPattern = "^\s*(q|Q)(uit){0,1}\s*$"
+    let movePattern = "^m(ove)?$"
+    let checkPattern = "^(c|C)(heck)?$"
+    let invPattern = "^(i|I)(nv|nventory)?$"
+    let GrabPattern = "^(g|G)(rab)?$"
+    let helpPattern = "^(h|H)(elp)?$"
+    let quitPattern = "^(q|Q)(uit)?$"
+    let digitPattern = "^\d$"
 
     //matching the regex for commands
     let (|MoveMatch|CheckMatch|InvMatch|GrabMatch|HelpMatch|QuitMatch|NoMatch|) input =
@@ -36,6 +37,11 @@ module PatternMatching =
         | _, _, _, grabMatch, _, _ when grabMatch.Success -> GrabMatch
         | _, _, _, _, helpMatch, _ when helpMatch.Success -> HelpMatch
         | _, _, _, _, _, quitMatch when quitMatch.Success -> QuitMatch
+        | _ -> NoMatch
+        
+    let (|DigitMatch|NoMatch|) input =
+        match Regex.Match(input, digitPattern) with
+        | digitMatch when digitMatch.Success -> DigitMatch
         | _ -> NoMatch
 
     //matching the regex for directions
