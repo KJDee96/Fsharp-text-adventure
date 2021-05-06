@@ -1,4 +1,4 @@
-﻿namespace Arcturus.Types
+namespace Arcturus.Types
 
 open System
 open Arcturus.Types.Level
@@ -47,3 +47,6 @@ module GameState =
 
     let setOutEvent (state: state) =
         over _inEvent (fun _ -> false) state
+        
+    let updateEventInGameState data (state: state) =
+        over (_gameWorld << _event) (fun _ -> data) state
