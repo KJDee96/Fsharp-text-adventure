@@ -4,6 +4,7 @@ open System
 open Arcturus.Types.Level
 open Arcturus.Types.Items
 open Arcturus.Types.Player
+open Arcturus.Types.Event
 open FSharpPlus.Lens
 
 module GameState =
@@ -62,3 +63,6 @@ module GameState =
         
     let updateEventInGameState data (state: state) =
         over (_gameWorld << _event) (fun _ -> data) state
+        
+    let updateEventInWorld path state =
+        updateEventInGameState (updateEventCurrentPath state.gameWorld.event.Value path) state 

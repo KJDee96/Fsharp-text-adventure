@@ -1,4 +1,4 @@
-﻿namespace Arcturus.Core
+namespace Arcturus.Core
 
 open Arcturus.Res.Strings
 open Arcturus.Utils.Errors
@@ -18,37 +18,40 @@ module Program =
         match state.inEvent with
         | true -> printEventTitlePrompt state.gameWorld.event.Value
         | false -> ()
+        
+    let checkError error state = 
+        match error with
+            //printing errors
+            | CannotParseInvalidCommand ->
+                printfn "%s" errorCannotParseInvalidCommandString
+                checkStateInEvent state
+                state
+            | CannotMove ->
+                printfn "%s" errorCannotMoveString
+                checkStateInEvent state
+                state
+            | CannotMatchCompass ->
+                printfn "%s" errorCannotMatchCompassString
+                checkStateInEvent state
+                state
+            | CannotMatchEventChoice ->
+                printfn "%s" errorCannotMatchEventChoiceString
+                checkStateInEvent state
+                state
 
+    let checkChoiceResult state choice = 
+        match choice with
+            | Choice1Of2 newState ->
+                checkStateInEvent newState
+                newState
+            | Choice2Of2 error -> checkError error state
+                    
     //parse and execute with state as input
     let parseAndExecute state =
         parseInput
-        //Kleisli composition composing parseinput result into execute command
-        >=> executeCommand state
-        >> fun x ->
-            match x with
-            | Choice1Of2 state ->
-                checkStateInEvent state
-                state
-            | Choice2Of2 error ->
-                match error with
-                //printing errors
-                | CannotParseInvalidCommand ->
-                    printfn "%s" errorCannotParseInvalidCommandString
-                    checkStateInEvent state
-                    state
-                | CannotMove ->
-                    printfn "%s" errorCannotMoveString
-                    checkStateInEvent state
-                    state
-                | CannotMatchCompass ->
-                    printfn "%s" errorCannotMatchCompassString
-                    checkStateInEvent state
-                    state
-                | CannotMatchEventChoice ->
-                    printfn "%s" errorCannotMatchEventChoiceString
-                    checkStateInEvent state
-                    state
-                    
+        >=> executeCommand state //Kleisli (choice) composition
+        >> checkChoiceResult state
+        
     [<EntryPoint>]
     let main argv =
         let gameState = init |> setName

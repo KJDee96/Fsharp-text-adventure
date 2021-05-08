@@ -39,7 +39,7 @@ module Event =
         f event.currentPath
         <&> fun currentPath -> { event with currentPath = currentPath }
 
-    let eventUpdateCurrentPath (event: event) response =
+    let updateEventCurrentPath (event: event) response =
         match event.checkFinish with
         | false ->
             Some(over _currentPath (fun _ -> response.next.Value) event)

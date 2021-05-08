@@ -171,15 +171,13 @@ module Commands =
                 let path =
                     state.gameWorld.event.Value.getPath.options.Value.Item(input - 1)
 
-                // check if path is doNothingPath
                 match path with
                 | path when path = doNothingPath -> setOutEvent state |> Choice1Of2
                 | _ ->
                     // let result = checkRequirementMet state path.requirement.Value
                     printfn "%s" path.text
-
-                    let newEvent = eventUpdateCurrentPath state.gameWorld.event.Value path
-                    updateEventInGameState newEvent state
+                    
+                    updateEventInWorld path state
                     |> Choice1Of2
             | Quit ->
                 Environment.Exit(0) //exits
