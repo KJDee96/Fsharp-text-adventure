@@ -1,16 +1,13 @@
 ﻿namespace Arcturus.Res
 
 module Strings =
-    let help = "      Tutorial - Type M or Move to choose which direction to move.
-        \n      Tutorial - Then type a compass direction to finalise your choice.
-        \n
-        \n      Tutorial - Type C or Check to have a look at your surroundings.
-        \n      Tutorial - Type I or Inv to have a look at what items are in your inventory.
-        \n      Tutorial - Type G or Grab to grab an item from the location
-        \n      Tutorial - Type H or Help to re-read this tutorial
-        \n      Tutorial - Type Q or Quit to quit the game.
-        \n      You are also encouraged to draw a grid in order to figure out the size of each floor
-        \n          and remember where you have or haven't been
+    let help = "[m/move] then [n/e/s/w north/east/south/west] to choose which direction to move.
+        \n[c/check] To have a look at your surroundings.
+        \n[i/inv] To have a look at what items are in your inventory.
+        \n[g/grab] To grab an item from the location
+        \n[h/help] To re-read this tutorial
+        \n[q/quit] To quit the game.
+        \nYou are also encouraged to draw a grid in order to figure out the size of each floor and remember where you have or haven't been
         \n"
 
     let opening =
