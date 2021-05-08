@@ -26,7 +26,7 @@ module Commands =
     let setName state =
         printf "%s" setNamePrompt
         let name = Console.ReadLine()
-        over (_player << _name) (fun _ -> name) state // update player name
+        updatePlayerName name state // update player name
 
     let testEventCycle (state: state) =
         let event = state.gameWorld.event.Value
@@ -42,8 +42,8 @@ module Commands =
         match state.gameWorld.event with
         | None -> Choice1Of2 state
         | _ ->
-            let newState = testEventCycle (setInEvent state)
-            Choice1Of2 newState
+            testEventCycle (setInEvent state)
+            |> Choice1Of2
 
 
     //returning state for player movement
@@ -80,13 +80,8 @@ module Commands =
 
                 let newGameWorldItemList =
                     removeItemFromWorld state.gameWorld item.Value
-
-                let returnState : state =
-                    state
-                    |> over (_player << _playerItems) (fun _ -> newPlayerInventory) // update player items
-                    |> over (_gameWorld << _levelItems) (fun _ -> newGameWorldItemList) // update world items
-
-                Choice1Of2 returnState
+                                    
+                Choice1Of2 (updateWorldItems newPlayerInventory newGameWorldItemList state)
             else
                 Choice2Of2 CannotParseInvalidCommand
         else
@@ -175,20 +170,17 @@ module Commands =
 
                 let path =
                     state.gameWorld.event.Value.getPath.options.Value.Item(input - 1)
-                
+
                 // check if path is doNothingPath
                 match path with
-                | path when path = doNothingPath ->
-                    let newState = setOutEvent state
-                    Choice1Of2 newState
+                | path when path = doNothingPath -> setOutEvent state |> Choice1Of2
                 | _ ->
-//                    let result = checkRequirementMet state path.requirement.Value
+                    // let result = checkRequirementMet state path.requirement.Value
                     printfn "%s" path.text
-                    
-                    let newEventState = eventUpdateCurrentPath state.gameWorld.event.Value path
-                    let newState = updateEventInGameState (Some(newEventState)) state
-                    
-                    Choice1Of2 newState
+
+                    let newEvent = eventUpdateCurrentPath state.gameWorld.event.Value path
+                    updateEventInGameState newEvent state
+                    |> Choice1Of2
             | Quit ->
                 Environment.Exit(0) //exits
                 Choice1Of2 state

@@ -1,4 +1,4 @@
-﻿namespace Arcturus.Types
+namespace Arcturus.Types
 
 open Arcturus.Types.Items
 open Arcturus.Types.Player
@@ -42,8 +42,8 @@ module Event =
     let eventUpdateCurrentPath (event: event) response =
         match event.checkFinish with
         | false ->
-            over _currentPath (fun _ -> response.next.Value) event
-        | _ -> event
+            Some(over _currentPath (fun _ -> response.next.Value) event)
+        | _ -> Some(event)
 
 
     let doNothingPath =

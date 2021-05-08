@@ -48,5 +48,17 @@ module GameState =
     let setOutEvent (state: state) =
         over _inEvent (fun _ -> false) state
         
+    let updatePlayerName data (state: state)  =
+        over (_player << _name) (fun _ -> data) state
+        
+    let updatePlayerItems data (state: state) =
+        over (_player << _playerItems) (fun _ -> data) state
+
+    let updateItemsInGameState data (state: state) =
+        over (_gameWorld << _levelItems) (fun _ -> data) state
+    
+    let updateWorldItems playerItems worldItems =
+        updatePlayerItems playerItems >> updateItemsInGameState worldItems
+        
     let updateEventInGameState data (state: state) =
         over (_gameWorld << _event) (fun _ -> data) state
