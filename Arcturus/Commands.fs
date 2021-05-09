@@ -38,12 +38,16 @@ module Commands =
 
         state
 
-    let checkForEvent (state: state) =
+    let checkForUnfinishedEvent (state: state) =
         match state.gameWorld.event with
         | None -> Choice1Of2 state
         | _ ->
-            testEventCycle (setInEvent state)
-            |> Choice1Of2
+            match state.gameWorld.event.Value.checkFinish with
+            | true ->
+                Choice1Of2 state
+            | false ->
+                testEventCycle (setInEvent state)
+                |> Choice1Of2
 
 
     //returning state for player movement
@@ -71,17 +75,17 @@ module Commands =
             Int32.TryParse(Console.ReadLine().Trim().ToLower())
 
         if parsed then
-            let item =
+            let itemInWorld =
                 List.tryItem (index - 1) state.gameWorld.levelItems
 
-            if item <> None then
+            if itemInWorld <> None then
                 let newPlayerInventory =
-                    addItemToInv state.player item.Value.item
+                    addItemToInv state.player itemInWorld.Value.item
 
                 let newGameWorldItemList =
-                    removeItemFromWorld state.gameWorld item.Value
+                    removeItemFromWorld state.gameWorld itemInWorld.Value
                                     
-                Choice1Of2 (updateWorldItems newPlayerInventory newGameWorldItemList state)
+                Choice1Of2 (updateGameStateItems newPlayerInventory newGameWorldItemList state)
             else
                 Choice2Of2 CannotParseInvalidCommand
         else
@@ -134,7 +138,7 @@ module Commands =
                 //                printNewLocation state
                 //                Choice1Of2 state
                 //            | Choice2Of2 error -> Choice2Of2 error
-                match checkForEvent state with
+                match checkForUnfinishedEvent state with
                 | Choice1Of2 state -> Choice1Of2 state
                 | Choice2Of2 error -> Choice2Of2 error
             | Check ->
@@ -168,17 +172,25 @@ module Commands =
             | EventPathChoice input ->
                 // TODO check path requirement
 
-                let path =
+                let response =
                     state.gameWorld.event.Value.getPath.options.Value.Item(input - 1)
 
-                match path with
-                | path when path = doNothingPath -> setOutEvent state |> Choice1Of2
+                match response with
+                | response when response = doNothingResponse -> setOutEvent state |> Choice1Of2
                 | _ ->
+                    let updatedEvent = updateEventCurrentPath state.gameWorld.event.Value response
+                    let newState = updateEventInGameState updatedEvent state
                     // let result = checkRequirementMet state path.requirement.Value
-                    printfn "%s" path.text
+                    printPathText newState.gameWorld.event.Value.getPath
                     
-                    updateEventInWorld path state
-                    |> Choice1Of2
+                    match newState.gameWorld.event.Value.checkFinish with
+                    | true ->
+                        let updatedEvent = updateEventSetFinished newState.gameWorld.event.Value
+                        updateEventInGameState (Some(updatedEvent)) state
+                        |> setOutEvent
+                        |> Choice1Of2
+                    | false ->
+                        Choice1Of2 newState
             | Quit ->
                 Environment.Exit(0) //exits
                 Choice1Of2 state

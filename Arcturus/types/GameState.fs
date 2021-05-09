@@ -55,14 +55,12 @@ module GameState =
     let updatePlayerItems data (state: state) =
         over (_player << _playerItems) (fun _ -> data) state
 
-    let updateItemsInGameState data (state: state) =
+    let updateItemsInGameWorld data (state: state) =
         over (_gameWorld << _levelItems) (fun _ -> data) state
     
-    let updateWorldItems playerItems worldItems =
-        updatePlayerItems playerItems >> updateItemsInGameState worldItems
+    let updateGameStateItems playerItems worldItems =
+        updatePlayerItems playerItems >> updateItemsInGameWorld worldItems
         
     let updateEventInGameState data (state: state) =
         over (_gameWorld << _event) (fun _ -> data) state
         
-    let updateEventInWorld path state =
-        updateEventInGameState (updateEventCurrentPath state.gameWorld.event.Value path) state 

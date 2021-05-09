@@ -51,6 +51,8 @@ module Printing =
     
     let printPathText (path: path) = printfn "%s" path.text
 
+    let printResponseText (response: response) = printfn "%s" response.text
+
     let printPathOptions path =
         List.indexed path.options.Value
         |> List.iter (fun (index, option) -> printfn "[%i] %s" (index + 1) option.text)

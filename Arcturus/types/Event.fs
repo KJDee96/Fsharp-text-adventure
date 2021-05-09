@@ -34,10 +34,14 @@ module Event =
             match (List.item this.currentPath this.paths).options with
             | None -> true
             | _ -> false
-            
+                        
     let inline _currentPath f event =
         f event.currentPath
         <&> fun currentPath -> { event with currentPath = currentPath }
+        
+    let inline _finished f event =
+        f event.finished
+        <&> fun finished -> { event with finished = finished }
 
     let updateEventCurrentPath (event: event) response =
         match event.checkFinish with
@@ -45,8 +49,10 @@ module Event =
             Some(over _currentPath (fun _ -> response.next.Value) event)
         | _ -> Some(event)
 
-
-    let doNothingPath =
+    let updateEventSetFinished (event: event) =
+        over _finished (fun _ -> true) event
+    
+    let doNothingResponse =
         { text = "Come back later"
           next = None
           requirement = None }
@@ -58,11 +64,11 @@ module Event =
                   options =
                       Some [ { text = "Hack it"
                                next = Some 1
-                               requirement = Some(StatCheck(Intelligence, StatValue 6uy)) }
+                               requirement = Some(StatCheck(Intelligence, StatValue 1uy)) }
                              { text = "Break it"
                                next = Some 2
                                requirement = Some(Item wrench) }
-                             doNothingPath ]
+                             doNothingResponse ]
                   result = None }
 
                 { text = "You hack the computer successfully"
