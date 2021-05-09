@@ -15,16 +15,17 @@ module PatternMatching =
     let southPattern = "^(s|south|S|South)$"
     let westPattern = "^(w|west|W|West)$"
 
-    let movePattern = "^m(ove)?$"
+    let movePattern = "^(m|M)(ove)?$"
     let checkPattern = "^(c|C)(heck)?$"
-    let invPattern = "^(i|I)(nv|nventory)?$"
     let GrabPattern = "^(g|G)(rab)?$"
+    let invPattern = "^(i|I)(nv|nventory)?$"
+    let statsPattern = "^(s|S)(tats)?$"
     let helpPattern = "^(h|H)(elp)?$"
     let quitPattern = "^(q|Q)(uit)?$"
     let digitPattern = "^\d$"
 
     //matching the regex for commands
-    let (|MoveMatch|CheckMatch|InvMatch|GrabMatch|HelpMatch|QuitMatch|NoMatch|) input =
+    let (|MoveMatch|CheckMatch|GrabMatch|InvMatch|HelpMatch|QuitMatch|NoMatch|) input =
         match Regex.Match(input, movePattern),
               Regex.Match(input, checkPattern),
               Regex.Match(input, invPattern),
@@ -33,12 +34,17 @@ module PatternMatching =
               Regex.Match(input, quitPattern) with
         | moveMatch, _, _, _, _, _ when moveMatch.Success -> MoveMatch
         | _, checkMatch, _, _, _, _ when checkMatch.Success -> CheckMatch
-        | _, _, invMatch, _, _, _ when invMatch.Success -> InvMatch
-        | _, _, _, grabMatch, _, _ when grabMatch.Success -> GrabMatch
+        | _, _, grabMatch, _, _, _ when grabMatch.Success -> GrabMatch
+        | _, _, _, invMatch, _, _ when invMatch.Success -> InvMatch
         | _, _, _, _, helpMatch, _ when helpMatch.Success -> HelpMatch
         | _, _, _, _, _, quitMatch when quitMatch.Success -> QuitMatch
         | _ -> NoMatch
-        
+    
+    let (|StatsMatch|NoMatch|) input =
+        match Regex.Match(input, statsPattern) with
+        | statsMatch when statsMatch.Success -> StatsMatch
+        | _ -> NoMatch
+
     let (|DigitMatch|NoMatch|) input =
         match Regex.Match(input, digitPattern) with
         | digitMatch when digitMatch.Success -> DigitMatch

@@ -17,8 +17,9 @@ module Commands =
     type Command =
         | Move of int * int
         | Check
-        | Inventory
         | Grab
+        | Inventory
+        | Stats
         | Help
         | EventPathChoice of int
         | Quit
@@ -91,13 +92,32 @@ module Commands =
         else
             Choice2Of2 CannotParseInvalidCommand
             
+    let matchStat stat value state= 
+            match stat with
+            |Strength ->
+                increaseStrengthStat value state
+            |Perception ->
+                increasePerceptionStat value state
+            |Endurance ->
+                increaseEnduranceStat value state
+            |Charisma ->
+                increaseCharismaStat value state
+            |Intelligence ->
+                increaseIntelligenceStat value state
+            |Agility ->
+                increaseAgilityStat value state
+            |Luck ->
+                increaseLuckStat value state
+            
     let performEventResult (state: state) =
         match state.gameWorld.event.Value.getPath.result.Value with
         | Item item ->
             let newPlayerInventory = addItemToInv state.player item
             updatePlayerItems newPlayerInventory state
-        | StatIncrease playerStat -> state
-
+        | StatIncrease playerStat ->
+            let stat,value = playerStat
+            let newState = matchStat stat value state
+            newState
 
     //parsing the matched direction command
     let parseDirectionInput input =
@@ -126,8 +146,9 @@ module Commands =
 
             parseDirectionInput input //pass result of input to parse direction
         | CheckMatch -> Choice1Of2 Check
-        | InvMatch -> Choice1Of2 Inventory
         | GrabMatch -> Choice1Of2 Grab
+        | InvMatch -> Choice1Of2 Inventory
+        | StatsMatch -> Choice1Of2 Stats
         | HelpMatch -> Choice1Of2 Help
         | DigitMatch ->
             let _parsed, input = Int32.TryParse input
@@ -153,9 +174,6 @@ module Commands =
                 //            printGameWorldItems state
                 //            printExits state
                 Choice1Of2 state
-            | Inventory ->
-                printInv state
-                Choice1Of2 state
             | Grab ->
                 printGameWorldItems state //prints items at location with index + 1
 
@@ -167,8 +185,14 @@ module Commands =
                     | Choice2Of2 error -> Choice2Of2 error
                 else
                     Choice1Of2 state
+            | Inventory ->
+                printInv state
+                Choice1Of2 state
+            | Stats ->
+                printStats state
+                Choice1Of2 state
             | Help ->
-                printfn "%s" help //prints help
+                printfn "%s" helpString //prints help
                 Choice1Of2 state
             | Quit ->
                 Environment.Exit(0) //exits

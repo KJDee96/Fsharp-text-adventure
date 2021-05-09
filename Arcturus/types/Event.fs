@@ -71,11 +71,11 @@ module Event =
                              doNothingResponse ]
                   result = None }
 
-                { text = "You hack the computer successfully"
+                { text = "You hack the computer successfully\nYou feel smarter"
                   options = None
                   result = Some(StatIncrease(Intelligence, StatValue 1uy)) }
 
-                { text = "You smash the computer"
+                { text = "You smash the computer\nYou found a screw in the smashed parts"
                   options = None
                   result = Some(Item(screw)) } ]
           currentPath = 0

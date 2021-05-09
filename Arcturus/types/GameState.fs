@@ -64,3 +64,23 @@ module GameState =
     let updateEventInGameState data (state: state) =
         over (_gameWorld << _event) (fun _ -> data) state
         
+    let increaseStrengthStat data (state: state) =
+        over (_player << _stats << _strength) (fun x -> x + data) state
+        
+    let increasePerceptionStat data (state: state) =
+        over (_player << _stats << _perception) (fun x -> x + data) state
+        
+    let increaseEnduranceStat data (state: state) =
+        over (_player << _stats << _endurance) (fun x -> x + data) state
+        
+    let increaseCharismaStat data (state: state) =
+        over (_player << _stats << _charisma) (fun x -> x + data) state
+        
+    let increaseIntelligenceStat data (state: state) =
+        over (_player << _stats << _intelligence) (fun x -> x + data) state
+        
+    let increaseAgilityStat data (state: state) =
+        over (_player << _stats << _agility) (fun x -> x + data) state
+        
+    let increaseLuckStat data (state: state) =
+        over (_player << _stats << _luck) (fun x -> x + data) state

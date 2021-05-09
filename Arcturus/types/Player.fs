@@ -14,10 +14,14 @@ module Player =
         | Agility
         | Luck
 
-    type playerStatValue = StatValue of uint8
-    
+    type playerStatValue =
+        | StatValue of uint8
+        static member (+) (x: playerStatValue, y: playerStatValue) : playerStatValue =
+            match x, y with
+            | StatValue x, StatValue y -> StatValue (x+y)
+
     type playerStat = statType * playerStatValue
-    
+
     type special =
         { Strength: playerStatValue
           Perception: playerStatValue
@@ -58,20 +62,21 @@ module Player =
     type player =
         { name: string
           inventory: item list
-          stats: special } with
-        member this.hasItem (item: item) = List.tryFind (fun _ -> item = item) this.inventory
-//        member this.hasStat (requiredStat: playerStat) =
+          stats: special }
+        member this.hasItem(item: item) =
+            List.tryFind (fun _ -> item = item) this.inventory
+    //        member this.hasStat (requiredStat: playerStat) =
 //            let stat,requiredValue = requiredStat
-//            
+//
 //            let specialProperties = typeof<special>.GetProperties ()
 //            let x = specialProperties |> Array.tryFind (fun t -> t.Name = stat.ToString ())
-//            let c = x |> Option.map (fun pi -> pi.GetValue this.stats) 
-//            
+//            let c = x |> Option.map (fun pi -> pi.GetValue this.stats)
+//
 //            Int32.TryParse(c.Value.ToString)
-            
-            
-//            playerstat = requiredStat
-        
+
+
+    //            playerstat = requiredStat
+
     let addItemToInv player item = item :: player.inventory
 
     //Prism for player type

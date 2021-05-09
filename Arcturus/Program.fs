@@ -11,7 +11,7 @@ module Program =
     let init = getInitialState //initialiser for state
 
     let input =
-        writeSlowly (List.ofSeq opening) // writeslowly passing in msg
+        writeSlowly (List.ofSeq openingString) // writeslowly passing in msg
         seq { yield! userInput }
 
     let checkStateInEvent state =

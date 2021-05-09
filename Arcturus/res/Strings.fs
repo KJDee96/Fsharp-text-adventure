@@ -1,16 +1,17 @@
 ﻿namespace Arcturus.Res
 
 module Strings =
-    let help = "[m/move] then [n/e/s/w north/east/south/west] to choose which direction to move.
+    let helpString = "[m/move] then [n/e/s/w north/east/south/west] to choose which direction to move.
         \n[c/check] To have a look at your surroundings.
-        \n[i/inv] To have a look at what items are in your inventory.
         \n[g/grab] To grab an item from the location
+        \n[i/inv] To have a look at what items are in your inventory.
+        \n[s/stats] To check your stats
         \n[h/help] To re-read this tutorial
         \n[q/quit] To quit the game.
         \nYou are also encouraged to draw a grid in order to figure out the size of each floor and remember where you have or haven't been
         \n"
 
-    let opening =
+    let openingString =
         "Welcome to the SpaceShip Arcturus!
         \nThe year is 2455 and you're part of the second round of colonists on their way to the star Proxima Centauri.
         \nIt has been 16 years since you were put into cryo-sleep with another 42 to go.
@@ -23,14 +24,18 @@ module Strings =
         \nYou can barely see the rest of the cryo-pods.
         \n
         \n"
-        + help
+        + helpString
 
     let movePrompt = "-Move where > "
     let setNamePrompt = "-Enter the name of your character > "
 
     let grabItemPrompt =
         "-Which item do you wish to grab? (Enter the number) > "
-
+    
+    let itemAddedToInvString = " has been added to your inventory"
+    
+    let foundItemString = "You found a "
+    
     let itemsLocationPrompt = "The items here are: "
     let noItemsLocationString = "There are no items at this location"
     let noItemsInvString = "You don't have any items"
