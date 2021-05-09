@@ -43,10 +43,10 @@ module GameState =
           gameWorld = floor_4
           inEvent = false }
 
-    let setInEvent (state: state) =
+    let setGameStateInEvent (state: state) =
         over _inEvent (fun _ -> true) state
 
-    let setOutEvent (state: state) =
+    let setGameStateOutEvent (state: state) =
         over _inEvent (fun _ -> false) state
         
     let updatePlayerName data (state: state)  =

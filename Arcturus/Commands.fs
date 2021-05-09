@@ -46,7 +46,7 @@ module Commands =
             | true ->
                 Choice1Of2 state
             | false ->
-                testEventCycle (setInEvent state)
+                testEventCycle (setGameStateInEvent state)
                 |> Choice1Of2
 
 
@@ -90,6 +90,13 @@ module Commands =
                 Choice2Of2 CannotParseInvalidCommand
         else
             Choice2Of2 CannotParseInvalidCommand
+            
+    let performEventResult (state: state) =
+        match state.gameWorld.event.Value.getPath.result.Value with
+        | Item item ->
+            let newPlayerInventory = addItemToInv state.player item
+            updatePlayerItems newPlayerInventory state
+        | StatIncrease playerStat -> state
 
 
     //parsing the matched direction command
@@ -176,7 +183,7 @@ module Commands =
                     state.gameWorld.event.Value.getPath.options.Value.Item(input - 1)
 
                 match response with
-                | response when response = doNothingResponse -> setOutEvent state |> Choice1Of2
+                | response when response = doNothingResponse -> setGameStateOutEvent state |> Choice1Of2
                 | _ ->
                     let updatedEvent = updateEventCurrentPath state.gameWorld.event.Value response
                     let newState = updateEventInGameState updatedEvent state
@@ -186,8 +193,10 @@ module Commands =
                     match newState.gameWorld.event.Value.checkFinish with
                     | true ->
                         let updatedEvent = updateEventSetFinished newState.gameWorld.event.Value
+                        
                         updateEventInGameState (Some(updatedEvent)) state
-                        |> setOutEvent
+                        |> performEventResult
+                        |> setGameStateOutEvent
                         |> Choice1Of2
                     | false ->
                         Choice1Of2 newState

@@ -10,7 +10,7 @@ module Event =
         | StatIncrease of playerStat
 
     type responseRequirement =
-        | Item of item
+        | ItemInInvCheck of item
         | StatCheck of playerStat
 
     type response =
@@ -67,7 +67,7 @@ module Event =
                                requirement = Some(StatCheck(Intelligence, StatValue 1uy)) }
                              { text = "Break it"
                                next = Some 2
-                               requirement = Some(Item wrench) }
+                               requirement = Some(ItemInInvCheck wrench) }
                              doNothingResponse ]
                   result = None }
 
@@ -77,7 +77,7 @@ module Event =
 
                 { text = "You smash the computer"
                   options = None
-                  result = Some(StatIncrease(Strength, StatValue 1uy)) } ]
+                  result = Some(Item(screw)) } ]
           currentPath = 0
           finished = false }
 
