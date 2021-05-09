@@ -1,4 +1,4 @@
-namespace Arcturus.Core
+﻿namespace Arcturus.Core
 
 open Arcturus.Res.Strings
 open Arcturus.Types.Player
@@ -93,21 +93,21 @@ module Commands =
             Choice2Of2 CannotParseInvalidCommand
             
     let matchStat stat value state= 
-            match stat with
-            |Strength ->
-                increaseStrengthStat value state
-            |Perception ->
-                increasePerceptionStat value state
-            |Endurance ->
-                increaseEnduranceStat value state
-            |Charisma ->
-                increaseCharismaStat value state
-            |Intelligence ->
-                increaseIntelligenceStat value state
-            |Agility ->
-                increaseAgilityStat value state
-            |Luck ->
-                increaseLuckStat value state
+        match stat with
+        |Strength ->
+            increaseStrengthStat value state
+        |Perception ->
+            increasePerceptionStat value state
+        |Endurance ->
+            increaseEnduranceStat value state
+        |Charisma ->
+            increaseCharismaStat value state
+        |Intelligence ->
+            increaseIntelligenceStat value state
+        |Agility ->
+            increaseAgilityStat value state
+        |Luck ->
+            increaseLuckStat value state
             
     let performEventResult (state: state) =
         match state.gameWorld.event.Value.getPath.result.Value with
@@ -155,7 +155,13 @@ module Commands =
             Choice1Of2(EventPathChoice input)
         | QuitMatch -> Choice1Of2 Quit
         | _ -> Choice2Of2 CannotParseInvalidCommand
+
+    let checkRequirementMet (state: state) (requirement: responseRequirement) =
+        match requirement with
+        | ItemInInvCheck item -> state.player.hasItem item
+        | StatCheck (statType, playerStat) -> state.player.hasStat statType playerStat
         
+
     //execute command
     let executeCommand state command =
         if not state.inEvent then
@@ -201,29 +207,33 @@ module Commands =
         else
             match command with
             | EventPathChoice input ->
-                // TODO check path requirement
-
                 let response =
                     state.gameWorld.event.Value.getPath.options.Value.Item(input - 1)
 
                 match response with
                 | response when response = doNothingResponse -> setGameStateOutEvent state |> Choice1Of2
                 | _ ->
-                    let updatedEvent = updateEventCurrentPath state.gameWorld.event.Value response
-                    let newState = updateEventInGameState updatedEvent state
-                    // let result = checkRequirementMet state path.requirement.Value
-                    printPathText newState.gameWorld.event.Value.getPath
-                    
-                    match newState.gameWorld.event.Value.checkFinish with
-                    | true ->
-                        let updatedEvent = updateEventSetFinished newState.gameWorld.event.Value
-                        
-                        updateEventInGameState (Some(updatedEvent)) state
-                        |> performEventResult
-                        |> setGameStateOutEvent
-                        |> Choice1Of2
+                    match checkRequirementMet state response.requirement.Value with
                     | false ->
-                        Choice1Of2 newState
+                        printfn "Requirement not met"
+                        setGameStateOutEvent state
+                        |> Choice1Of2
+                    | true ->
+                        let updatedEvent = updateEventCurrentPath state.gameWorld.event.Value response
+                        let newState = updateEventInGameState updatedEvent state
+                        // let result = checkRequirementMet state path.requirement.Value
+                        printPathText newState.gameWorld.event.Value.getPath
+                        
+                        match newState.gameWorld.event.Value.checkFinish with
+                        | true ->
+                            let updatedEvent = updateEventSetFinished newState.gameWorld.event.Value
+                            
+                            updateEventInGameState (Some(updatedEvent)) state
+                            |> performEventResult
+                            |> setGameStateOutEvent
+                            |> Choice1Of2
+                        | false ->
+                            Choice1Of2 newState
             | Quit ->
                 Environment.Exit(0) //exits
                 Choice1Of2 state

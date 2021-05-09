@@ -28,7 +28,7 @@ module GameState =
 
     let getInitialPlayer =
         { name = ""
-          inventory = [ keycard ]
+          inventory = []
           stats =
               { Strength = StatValue 1uy
                 Perception = StatValue 1uy

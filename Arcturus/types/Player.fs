@@ -63,9 +63,29 @@ module Player =
         { name: string
           inventory: item list
           stats: special }
-        member this.hasItem(item: item) =
-            List.tryFind (fun _ -> item = item) this.inventory
-    //        member this.hasStat (requiredStat: playerStat) =
+        member this.hasItem (item: item) =
+            let found = List.tryFind (fun i -> i = item) this.inventory
+            match found with
+            | Some item -> true
+            | None -> false
+        member this.hasStat stat value = 
+            match stat with
+            |Strength ->
+                this.stats.Strength = value
+            |Perception ->
+                this.stats.Perception = value
+            |Endurance ->
+                this.stats.Endurance = value
+            |Charisma ->
+                this.stats.Charisma = value
+            |Intelligence ->
+                this.stats.Intelligence = value
+            |Agility ->
+                this.stats.Agility = value
+            |Luck ->
+                this.stats.Luck = value
+
+//        member this.hasStat (requiredStat: playerStat) =
 //            let stat,requiredValue = requiredStat
 //
 //            let specialProperties = typeof<special>.GetProperties ()
